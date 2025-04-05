@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="400.0"
+            prefWidth="600.0"
+            xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.bugs.controller.SettingsController">
+
+    <Button layoutX="505.0" layoutY="14.0"
+            text="EN - English" />
+    <ToggleButton layoutX="200.0" layoutY="100.0"
+                  text="Text To Speech" />
+    <ToggleButton layoutX="200.0" layoutY="200.0"
+                  text="Quiz Timer" />
+    <ToggleButton layoutX="200.0" layoutY="300.0"
+                  text="High Contrast" />
+
+
+    <Label layoutX="236.0" layoutY="43.0"
+           text="Settings">
+        <font>
+            <Font name="Droid Serif" size="36.0" />
+         </font>
+      </Label>
+
+</AnchorPane>

@@ -1,15 +1,21 @@
 package com.example.bugs.controller;
 
+import com.example.bugs.HelloApplication;
 import com.example.bugs.model.Contact;
 import com.example.bugs.model.IContactDAO;
 import com.example.bugs.model.SqliteContactDAO;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.scene.control.Button;
 
+import java.io.IOException;
 import java.util.List;
 
 public class MainController {
@@ -26,6 +32,8 @@ public class MainController {
     private TextField phoneTextField;
     @FXML
     private VBox contactContainer;
+    @FXML
+    private Button nextButton;
     public MainController() {
         contactDAO = new SqliteContactDAO();
     }
@@ -156,5 +164,14 @@ public class MainController {
             // we can just re-select it to refresh the text fields
             selectContact(selectedContact);
         }
+    }
+    @FXML
+    protected void onNextPage() throws IOException {
+        //Go on to the base page
+        Stage stage = (Stage) nextButton.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("base-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), HelloApplication.WIDTH, HelloApplication.HEIGHT);
+        stage.setScene(scene);
+
     }
 }
