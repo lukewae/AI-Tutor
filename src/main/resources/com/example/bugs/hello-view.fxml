@@ -1,55 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bugs.controller.HelloController">
-   <children>
-      <AnchorPane prefHeight="400.0" prefWidth="323.0">
-         <children>
-            <Label layoutX="66.0" layoutY="54.0" text="Welcome Back!" textAlignment="CENTER">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Label>
+<HBox xmlns="http://javafx.com/javafx/17.0.12"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.bugs.controller.HelloController">
 
-            <Label layoutX="38.0" layoutY="106.0" prefHeight="17.0" prefWidth="110.0" text="Email address" />
+    <!-- Left side with login form -->
+    <VBox spacing="20" alignment="CENTER_LEFT" prefWidth="320" style="-fx-padding: 20;">
+        <Label text="Welcome to AI Tutor">
+            <font>
+                <Font name="Droid Serif" size="24.0" />
+            </font>
+        </Label>
 
-            <TextField layoutX="38.0" layoutY="130.0" prefHeight="26.0" prefWidth="262.0" />
+        <VBox spacing="5">
+            <Label text="Email address" />
+            <TextField fx:id="emailField" prefWidth="262.0" />
+        </VBox>
 
-            <Label layoutX="38.0" layoutY="176.0" prefHeight="17.0" prefWidth="110.0" text="Password" />
+        <VBox spacing="5">
+            <Label text="Password" />
+            <PasswordField fx:id="passwordField" prefWidth="262.0" />
+        </VBox>
 
-            <TextField layoutX="38.0" layoutY="200.0" prefHeight="26.0" prefWidth="262.0" />
+        <Button fx:id="signInButton" 
+                onAction="#signInButtonClicked"
+                text="Sign In"
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white;"
+                prefWidth="262.0" />
 
-            <CheckBox layoutX="19.0" layoutY="232.0" mnemonicParsing="false" text="Remember for 30 days" />
-
-            <Hyperlink layoutX="194.0" layoutY="229.0" text="Forgot password" />
-
-            <Label layoutX="29.0" layoutY="356.0" text="Don't have an account?" />
-
-            <Button fx:id="signInButton"
-                    layoutX="135.0"
-                    layoutY="285.0"
-                    mnemonicParsing="false"
-                    onAction="#signInButtonClicked"
-                    text="Log-In" />
-
-            <Button fx:id="signUpButton"
+        <HBox alignment="CENTER" spacing="5">
+            <Label text="Don't have an account?" />
+            <Button fx:id="signUpButton" 
                     onAction="#signUpButtonClicked"
-                    layoutX="161.0"
-                    layoutY="356.0"
-                    mnemonicParsing="false"
-                    prefHeight="18.0"
-                    prefWidth="51.0"
-                    text="Sign-Up">
-               <font>
-                  <Font size="8.0" />
-               </font></Button>
+                    text="Sign Up"
+                    style="-fx-background-color: transparent; -fx-text-fill: blue;" />
+        </HBox>
+    </VBox>
 
-         </children>
-      </AnchorPane>
-      <ImageView fitHeight="247.0" fitWidth="262.0" layoutX="313.0" layoutY="77.0" pickOnBounds="true" preserveRatio="true" />
-   </children>
-</AnchorPane>
+    <!-- Right side with image -->
+    <ImageView fitWidth="320" 
+               fitHeight="400" 
+               preserveRatio="true">
+        <Image url="@images/ai tutor log in image.png" />
+    </ImageView>
+
+</HBox>

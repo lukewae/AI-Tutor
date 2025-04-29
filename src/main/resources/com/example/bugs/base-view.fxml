@@ -9,18 +9,24 @@
             xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.bugs.controller.BaseController">
-    <Label layoutX="211.0" layoutY="66.0" text="MAI Tutor" wrapText="true">
-      <font>
-         <Font name="Droid Serif" size="36.0" />
-      </font></Label>
+    
+    <Label layoutX="211.0" layoutY="66.0" text="MAI Tutor">
+        <font>
+            <Font name="Droid Serif" size="36.0" />
+        </font>
+    </Label>
+    
     <Button fx:id="studyButton"
             layoutX="265.0" layoutY="200.0"
             text="Study" />
+            
     <Button fx:id="settingsButton"
             onAction="#onSettingsButtonClick"
             layoutX="259.0" layoutY="259.0"
             text="Settings" />
-   <Button fx:id="logOutButton"
+            
+    <Button fx:id="logOutButton"
+            onAction="#onLogOutButtonClick"
             layoutX="259.0" layoutY="314.0"
             text="Log Out" />
 </AnchorPane>
