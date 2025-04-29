@@ -33,4 +33,13 @@ public class BaseController {
         Scene scene = new Scene(fxmlLoader.load(), HelloApplication.WIDTH, HelloApplication.HEIGHT);
         stage.setScene(scene);
     }
+
+    @FXML
+    protected void onStudyButtonClick() throws IOException {
+        Stage stage = (Stage) studyButton.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("study-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 800, 600); // Use the dimensions from study-view.fxml
+        stage.setScene(scene);
+        stage.setResizable(true); // Allow resizing for the chat window
+    }
 }
