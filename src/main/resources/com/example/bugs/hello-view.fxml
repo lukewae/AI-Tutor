@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.Hyperlink?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.loginscenebuilder.HelloController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bugs.controller.HelloController">
    <children>
       <AnchorPane prefHeight="400.0" prefWidth="323.0">
          <children>
@@ -25,19 +20,16 @@
             <TextField layoutX="38.0" layoutY="200.0" prefHeight="26.0" prefWidth="262.0" />
             <CheckBox layoutX="19.0" layoutY="232.0" mnemonicParsing="false" text="Remember for 30 days" />
             <Hyperlink layoutX="194.0" layoutY="229.0" text="Forgot password" />
-            <Hyperlink layoutX="131.0" layoutY="277.0" text="Sign in">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Hyperlink>
             <Label layoutX="29.0" layoutY="356.0" text="Don't have an account?" />
             <Hyperlink layoutX="167.0" layoutY="353.0" text="Sign up." />
+            <Button fx:id="signInButton"
+                    onAction="#signInButtonClicked"
+                    layoutX="135.0"
+                    layoutY="285.0"
+                    mnemonicParsing="false"
+                    text="Log-In" />
          </children>
       </AnchorPane>
-      <ImageView fitHeight="247.0" fitWidth="262.0" layoutX="313.0" layoutY="77.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@AI%20tutor%20log%20in%20image.png" />
-         </image>
-      </ImageView>
+      <ImageView fitHeight="247.0" fitWidth="262.0" layoutX="313.0" layoutY="77.0" pickOnBounds="true" preserveRatio="true" />
    </children>
 </AnchorPane>
