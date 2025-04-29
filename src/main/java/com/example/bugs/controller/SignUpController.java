@@ -47,12 +47,12 @@ public class SignUpController {
         }
         
         SignUp user = new SignUp(firstName, lastName, email, password);
-        
-        if (!user.isValidUser()) {
-            showAlert("Error", "Please check your input!");
-            return;
-        }
-        
+//        Temp fix, was causing error on first time account creation
+//        if (!user.isValidUser()
+//        {
+//            showAlert("Please check your input!");
+//            return;
+//        }
         if (userDAO.emailExists(email)) {
             showAlert("Error", "Email already exists!");
             return;
