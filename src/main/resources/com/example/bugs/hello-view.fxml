@@ -14,20 +14,40 @@
                   <Font size="24.0" />
                </font>
             </Label>
+
             <Label layoutX="38.0" layoutY="106.0" prefHeight="17.0" prefWidth="110.0" text="Email address" />
+
             <TextField layoutX="38.0" layoutY="130.0" prefHeight="26.0" prefWidth="262.0" />
+
             <Label layoutX="38.0" layoutY="176.0" prefHeight="17.0" prefWidth="110.0" text="Password" />
+
             <TextField layoutX="38.0" layoutY="200.0" prefHeight="26.0" prefWidth="262.0" />
+
             <CheckBox layoutX="19.0" layoutY="232.0" mnemonicParsing="false" text="Remember for 30 days" />
+
             <Hyperlink layoutX="194.0" layoutY="229.0" text="Forgot password" />
+
             <Label layoutX="29.0" layoutY="356.0" text="Don't have an account?" />
-            <Hyperlink layoutX="167.0" layoutY="353.0" text="Sign up." />
+
             <Button fx:id="signInButton"
-                    onAction="#signInButtonClicked"
                     layoutX="135.0"
                     layoutY="285.0"
                     mnemonicParsing="false"
+                    onAction="#signInButtonClicked"
                     text="Log-In" />
+
+            <Button fx:id="signUpButton"
+                    onAction="#signUpButtonClicked"
+                    layoutX="161.0"
+                    layoutY="356.0"
+                    mnemonicParsing="false"
+                    prefHeight="18.0"
+                    prefWidth="51.0"
+                    text="Sign-Up">
+               <font>
+                  <Font size="8.0" />
+               </font></Button>
+
          </children>
       </AnchorPane>
       <ImageView fitHeight="247.0" fitWidth="262.0" layoutX="313.0" layoutY="77.0" pickOnBounds="true" preserveRatio="true" />

@@ -18,7 +18,7 @@ import javafx.scene.control.Button;
 import java.io.IOException;
 import java.util.List;
 
-public class MainController {
+public class SignUpController {
     @FXML
     private ListView<Contact> contactsListView;
     private IContactDAO contactDAO;
@@ -29,12 +29,13 @@ public class MainController {
     @FXML
     private TextField emailTextField;
     @FXML
-    private TextField phoneTextField;
+    private TextField passwordTextField;
     @FXML
     private VBox contactContainer;
     @FXML
-    private Button nextButton;
-    public MainController() {
+    private Button returnButton;
+
+    public SignUpController() {
         contactDAO = new SqliteContactDAO();
     }
 
@@ -48,7 +49,7 @@ public class MainController {
         firstNameTextField.setText(contact.getFirstName());
         lastNameTextField.setText(contact.getLastName());
         emailTextField.setText(contact.getEmail());
-        phoneTextField.setText(contact.getPhone());
+        passwordTextField.setText(contact.getPassword());
     }
 
     /**
@@ -122,7 +123,7 @@ public class MainController {
             selectedContact.setFirstName(firstNameTextField.getText());
             selectedContact.setLastName(lastNameTextField.getText());
             selectedContact.setEmail(emailTextField.getText());
-            selectedContact.setPhone(phoneTextField.getText());
+            selectedContact.setPassword(passwordTextField.getText());
             contactDAO.updateContact(selectedContact);
             syncContacts();
         }
@@ -144,8 +145,8 @@ public class MainController {
         final String DEFAULT_FIRST_NAME = "New";
         final String DEFAULT_LAST_NAME = "Contact";
         final String DEFAULT_EMAIL = "";
-        final String DEFAULT_PHONE = "";
-        Contact newContact = new Contact(DEFAULT_FIRST_NAME, DEFAULT_LAST_NAME, DEFAULT_EMAIL, DEFAULT_PHONE);
+        final String DEFAULT_PASSWORD = "";
+        Contact newContact = new Contact(DEFAULT_FIRST_NAME, DEFAULT_LAST_NAME, DEFAULT_EMAIL, DEFAULT_PASSWORD);
         // Add the new contact to the database
         contactDAO.addContact(newContact);
         syncContacts();
@@ -156,22 +157,12 @@ public class MainController {
     }
 
     @FXML
-    private void onCancel() {
-        // Find the selected contact
-        Contact selectedContact = contactsListView.getSelectionModel().getSelectedItem();
-        if (selectedContact != null) {
-            // Since the contact hasn't been modified,
-            // we can just re-select it to refresh the text fields
-            selectContact(selectedContact);
-        }
-    }
-    @FXML
-    protected void onNextPage() throws IOException {
-        //Go on to the base page
-        Stage stage = (Stage) nextButton.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("base-view.fxml"));
+    private void onCancel() throws IOException {
+        // Returns to the Log-In Screen
+        Stage stage = (Stage) returnButton.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), HelloApplication.WIDTH, HelloApplication.HEIGHT);
         stage.setScene(scene);
-
     }
+
 }

@@ -18,8 +18,8 @@ public class SqliteContactDAO implements IContactDAO {
                     + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + "firstName VARCHAR NOT NULL,"
                     + "lastName VARCHAR NOT NULL,"
-                    + "phone VARCHAR NOT NULL,"
-                    + "email VARCHAR NOT NULL"
+                    + "email VARCHAR NOT NULL,"
+                    + "phone VARCHAR NOT NULL"
                     + ")";
             statement.execute(query);
         } catch (Exception e) {
@@ -32,7 +32,7 @@ public class SqliteContactDAO implements IContactDAO {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO contacts (firstName, lastName, phone, email) VALUES (?, ?, ?, ?)");
             statement.setString(1,contact.getFirstName());
             statement.setString(2,contact.getLastName());
-            statement.setString(3,contact.getPhone());
+            statement.setString(3,contact.getPassword());
             statement.setString(4,contact.getEmail());
             statement.executeUpdate();
             // Set to the id of the new contact
@@ -52,7 +52,7 @@ public class SqliteContactDAO implements IContactDAO {
             PreparedStatement statement = connection.prepareStatement("UPDATE contacts SET firstName = ?, lastName = ?, phone = ?, email = ? WHERE id = ?");
             statement.setString(1,contact.getFirstName());
             statement.setString(2,contact.getLastName());
-            statement.setString(3,contact.getPhone());
+            statement.setString(3,contact.getPassword());
             statement.setString(4,contact.getEmail());
             statement.setInt(5, contact.getId());
             statement.executeUpdate();

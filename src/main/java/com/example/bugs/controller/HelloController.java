@@ -18,7 +18,7 @@ public class HelloController {
     @FXML
     private CheckBox agreeCheckBox;
     @FXML
-    private Button nextButton;
+    private Button signUpButton;
     @FXML
     private Button signInButton;
 
@@ -31,22 +31,29 @@ public class HelloController {
         stage.setScene(scene);
     }
     @FXML
-    protected void onAgreeCheckBoxClick() {
-        boolean accepted = agreeCheckBox.isSelected();
-        nextButton.setDisable(!accepted);
-    }
-
-    @FXML
-    protected void onNextButtonClick() throws IOException {
-        Stage stage = (Stage) nextButton.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("main-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), HelloApplication.WIDTH, HelloApplication.HEIGHT);
+    protected void signUpButtonClicked() throws IOException {
+        Stage stage = (Stage) signUpButton.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("signup-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
         stage.setScene(scene);
     }
+//    @FXML
+//    protected void onAgreeCheckBoxClick() {
+//        boolean accepted = agreeCheckBox.isSelected();
+//        nextButton.setDisable(!accepted);
+//    }
 
-    @FXML
-    protected void onCancelButtonClick() {
-        Stage stage = (Stage) nextButton.getScene().getWindow();
-        stage.close();
-    }
+//    @FXML
+//    protected void onNextButtonClick() throws IOException {
+//        Stage stage = (Stage) nextButton.getScene().getWindow();
+//        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("signup-view.fxml"));
+//        Scene scene = new Scene(fxmlLoader.load(), HelloApplication.WIDTH, HelloApplication.HEIGHT);
+//        stage.setScene(scene);
+//    }
+//
+//    @FXML
+//    protected void onCancelButtonClick() {
+//        Stage stage = (Stage) nextButton.getScene().getWindow();
+//        stage.close();
+//    }
 }
