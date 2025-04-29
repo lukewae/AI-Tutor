@@ -98,7 +98,7 @@ public class ChatbotController {
                     responseLabel.setText(currentContent +
                             "\n\nYou: " + userMessage +
                             "\n\nAI Tutor: Sorry, I encountered an error. " +
-                            "Please check if the Ollama server is running with the deepseek-r1:7b model.");
+                            "Please check if the Ollama server is running with the gemma3:4b model. You can ensure your Ollama server is open by entering http://localhost:11434 in your browser. If you don't see \"Ollama is running\", check your firewall settings.");
                     e.printStackTrace();
                 });
             }
