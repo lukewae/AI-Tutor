@@ -3,12 +3,18 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<?import javafx.geometry.Insets?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #f5f7fa;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bugs.controller.SettingsController">
-    <VBox alignment="CENTER" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <!-- Header with back button and title -->
-        <HBox alignment="CENTER" style="-fx-padding: 20px; -fx-background-color: #737879; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #f5f7fa;"
+            xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.bugs.controller.SettingsController">
+
+    <VBox alignment="TOP_CENTER" spacing="20.0"
+          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+        <!-- Header with back button -->
+        <HBox alignment="CENTER_LEFT" style="-fx-background-color: #737879; -fx-padding: 15px;">
             <Button fx:id="backButton" mnemonicParsing="false" text="← Back"
                     style="-fx-text-fill: white; -fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 14px;"
                     onAction="#handleBackButton"/>
@@ -21,17 +27,17 @@
 
         <!-- Settings content -->
         <VBox alignment="CENTER" spacing="30.0" style="-fx-padding: 20px;">
-            <!-- Language Selection -->
+            <!-- Language selection -->
             <HBox alignment="CENTER" spacing="10.0">
                 <Label text="Language:" style="-fx-font-size: 16px;"/>
                 <Button text="EN - English" style="-fx-background-radius: 20px; -fx-padding: 5px 15px;"/>
             </HBox>
 
-            <!-- Toggle Options -->
-            <VBox alignment="CENTER_LEFT" spacing="20.0">
-                <ToggleButton text="Text To Speech" style="-fx-background-radius: 20px; -fx-padding: 5px 15px;"/>
-                <ToggleButton text="Quiz Timer" style="-fx-background-radius: 20px; -fx-padding: 5px 15px;"/>
-                <ToggleButton text="High Contrast" style="-fx-background-radius: 20px; -fx-padding: 5px 15px;"/>
+            <!-- Toggle options -->
+            <VBox alignment="CENTER_LEFT" spacing="15.0" style="-fx-padding: 0 50px;">
+                <ToggleButton text="Text To Speech" style="-fx-background-radius: 20px; -fx-padding: 8px 15px;"/>
+                <ToggleButton text="Quiz Timer" style="-fx-background-radius: 20px; -fx-padding: 8px 15px;"/>
+                <ToggleButton text="High Contrast" style="-fx-background-radius: 20px; -fx-padding: 8px 15px;"/>
             </VBox>
         </VBox>
     </VBox>
