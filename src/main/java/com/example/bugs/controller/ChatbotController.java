@@ -1,5 +1,6 @@
 package com.example.bugs.controller;
 
+import com.example.bugs.HelloApplication;
 import io.github.ollama4j.OllamaAPI;
 import io.github.ollama4j.models.chat.OllamaChatMessage;
 import io.github.ollama4j.models.chat.OllamaChatRequest;
@@ -8,12 +9,13 @@ import io.github.ollama4j.models.chat.OllamaChatMessageRole;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,10 +26,19 @@ public class ChatbotController {
     @FXML private Label responseLabel;
     @FXML private ProgressIndicator thinkingSpinner;
     @FXML private VBox chatContainer;
+    @FXML private Button backButton;
 
     private OllamaAPI ollamaAPI;
     private List<OllamaChatMessage> chatHistory = new ArrayList<>();
     private static final String MODEL_NAME = "gemma3:4b";
+
+    @FXML
+    protected void handleBackButton() throws IOException {
+        Stage stage = (Stage) backButton.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("base-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), HelloApplication.WIDTH, HelloApplication.HEIGHT);
+        stage.setScene(scene);
+    }
 
     @FXML
     public void initialize() {

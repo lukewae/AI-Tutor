@@ -1,31 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
 
-<AnchorPane prefHeight="400.0"
-            prefWidth="600.0"
-            xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.bugs.controller.SettingsController">
+<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #f5f7fa;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bugs.controller.SettingsController">
+    <VBox alignment="CENTER" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <!-- Header with back button and title -->
+        <HBox alignment="CENTER" style="-fx-padding: 20px; -fx-background-color: #737879; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+            <Button fx:id="backButton" mnemonicParsing="false" text="← Back"
+                    style="-fx-text-fill: white; -fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 14px;"
+                    onAction="#handleBackButton"/>
+            <Label text="Settings" style="-fx-text-fill: white; -fx-padding: 0 20px;">
+                <font>
+                    <Font name="Droid Serif" size="36.0" />
+                </font>
+            </Label>
+        </HBox>
 
-    <Button layoutX="505.0" layoutY="14.0"
-            text="EN - English" />
-    <ToggleButton layoutX="200.0" layoutY="100.0"
-                  text="Text To Speech" />
-    <ToggleButton layoutX="200.0" layoutY="200.0"
-                  text="Quiz Timer" />
-    <ToggleButton layoutX="200.0" layoutY="300.0"
-                  text="High Contrast" />
+        <!-- Settings content -->
+        <VBox alignment="CENTER" spacing="30.0" style="-fx-padding: 20px;">
+            <!-- Language Selection -->
+            <HBox alignment="CENTER" spacing="10.0">
+                <Label text="Language:" style="-fx-font-size: 16px;"/>
+                <Button text="EN - English" style="-fx-background-radius: 20px; -fx-padding: 5px 15px;"/>
+            </HBox>
 
-
-    <Label layoutX="236.0" layoutY="43.0"
-           text="Settings">
-        <font>
-            <Font name="Droid Serif" size="36.0" />
-         </font>
-      </Label>
-
+            <!-- Toggle Options -->
+            <VBox alignment="CENTER_LEFT" spacing="20.0">
+                <ToggleButton text="Text To Speech" style="-fx-background-radius: 20px; -fx-padding: 5px 15px;"/>
+                <ToggleButton text="Quiz Timer" style="-fx-background-radius: 20px; -fx-padding: 5px 15px;"/>
+                <ToggleButton text="High Contrast" style="-fx-background-radius: 20px; -fx-padding: 5px 15px;"/>
+            </VBox>
+        </VBox>
+    </VBox>
 </AnchorPane>
