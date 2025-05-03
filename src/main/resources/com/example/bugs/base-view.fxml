@@ -4,30 +4,17 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0"
-            prefWidth="600.0"
-            xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.bugs.controller.BaseController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bugs.controller.BaseController">
 
-    <Label layoutX="211.0" layoutY="66.0" text="MAI Tutor">
+    <Label layoutX="211.0" layoutY="66.0" styleClass="light-mode" text="MAI Tutor">
         <font>
             <Font name="Droid Serif" size="36.0" />
         </font>
     </Label>
 
-    <Button fx:id="studyButton"
-            onAction="#onStudyButtonClick"
-            layoutX="265.0" layoutY="200.0"
-            text="Study" />
+    <Button fx:id="studyButton" layoutX="265.0" layoutY="200.0" onAction="#onStudyButtonClick" style="-fx-background-radius: 20px; -fx-padding: 8px 15px;" text="Study" />
 
-    <Button fx:id="settingsButton"
-            onAction="#onSettingsButtonClick"
-            layoutX="259.0" layoutY="259.0"
-            text="Settings" />
+    <Button fx:id="settingsButton" layoutX="259.0" layoutY="259.0" onAction="#onSettingsButtonClick" style="-fx-background-radius: 20px; -fx-padding: 8px 15px;" text="Settings" />
 
-    <Button fx:id="logOutButton"
-            onAction="#onLogOutButtonClick"
-            layoutX="259.0" layoutY="314.0"
-            text="Log Out" />
+    <Button fx:id="logOutButton" layoutX="259.0" layoutY="314.0" onAction="#onLogOutButtonClick" style="-fx-background-radius: 20px; -fx-padding: 8px 15px;" text="Log Out" />
 </AnchorPane>
