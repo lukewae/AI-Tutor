@@ -4,9 +4,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bugs.controller.BaseController">
+<AnchorPane fx:id="rootPane" styleClass="light-mode" prefHeight="400.0" prefWidth="600.0" 
+            xmlns="http://javafx.com/javafx/17.0.12" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="com.example.bugs.controller.BaseController">
 
-    <Label layoutX="211.0" layoutY="66.0" styleClass="light-mode" text="MAI Tutor">
+    <Label layoutX="211.0" layoutY="66.0" text="MAI Tutor" styleClass="title-text">
         <font>
             <Font name="Droid Serif" size="36.0" />
         </font>

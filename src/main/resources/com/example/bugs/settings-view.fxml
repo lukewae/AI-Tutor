@@ -4,8 +4,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-
-<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #f5f7fa;"
+<AnchorPane fx:id="rootPane" stylesheets="@styles/themes.css" styleClass="light-mode"
+            prefHeight="640.0" prefWidth="800.0"
             xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.bugs.controller.SettingsController">
 
@@ -14,11 +14,11 @@
           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
         <!-- Header with back button -->
-        <HBox alignment="CENTER_LEFT" style="-fx-background-color: #737879; -fx-padding: 15px;">
+        <HBox alignment="CENTER_LEFT" styleClass="header" style="-fx-padding: 15px;">
             <Button fx:id="backButton" mnemonicParsing="false" text="← Back"
-                    style="-fx-text-fill: white; -fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 14px;"
+                    styleClass="back-button" style="-fx-cursor: hand; -fx-font-size: 14px;"
                     onAction="#handleBackButton"/>
-            <Label text="Settings" style="-fx-text-fill: white; -fx-padding: 0 20px;">
+            <Label text="Settings" styleClass="header-text" style="-fx-padding: 0 20px;">
                 <font>
                     <Font name="Droid Serif" size="36.0" />
                 </font>
@@ -27,17 +27,36 @@
 
         <!-- Settings content -->
         <VBox alignment="CENTER" spacing="30.0" style="-fx-padding: 20px;">
-            <!-- Language selection -->
-            <HBox alignment="CENTER" spacing="10.0">
+            <!-- Theme options -->
+            <Label text="Theme Settings" styleClass="settings-header" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+            
+            <VBox alignment="CENTER_LEFT" spacing="15.0" style="-fx-padding: 0 50px;">
+                <Label text="Display Mode:" styleClass="settings-label" style="-fx-font-size: 16px;"/>
+                <HBox spacing="15.0">
+                    <ToggleButton fx:id="darkModeToggle" text="Dark Mode" 
+                                 styleClass="toggle-button, settings-toggle"
+                                 onAction="#handleDarkModeToggle"/>
+                </HBox>
+                
+                <Label text="Accessibility:" styleClass="settings-label" style="-fx-font-size: 16px;"/>
+                <HBox spacing="15.0">
+                    <ToggleButton fx:id="highContrastToggle" text="High Contrast" 
+                                 styleClass="toggle-button, settings-toggle"
+                                 onAction="#handleHighContrastToggle"/>
+                </HBox>
+                
+                <Label text="Placeholder Option:" styleClass="settings-label" style="-fx-font-size: 16px;"/>
+                <HBox spacing="15.0">
+                    <ToggleButton fx:id="placeholderToggle" text="Placeholder" 
+                                 styleClass="toggle-button, settings-toggle"
+                                 onAction="#handlePlaceholderToggle"/>
+                </HBox>
+            </VBox>
+            
+            <!-- Language section preserved from original -->
+            <VBox alignment="CENTER" spacing="10.0" style="-fx-padding: 20px 0 0 0;">
                 <Label text="Language:" style="-fx-font-size: 16px;"/>
                 <Button text="EN - English" style="-fx-background-radius: 20px; -fx-padding: 5px 15px;"/>
-            </HBox>
-
-            <!-- Toggle options -->
-            <VBox alignment="CENTER_LEFT" spacing="15.0" style="-fx-padding: 0 50px;">
-                <ToggleButton text="Text To Speech" style="-fx-background-radius: 20px; -fx-padding: 8px 15px;"/>
-                <ToggleButton text="Quiz Timer" style="-fx-background-radius: 20px; -fx-padding: 8px 15px;"/>
-                <ToggleButton text="High Contrast" style="-fx-background-radius: 20px; -fx-padding: 8px 15px;"/>
             </VBox>
         </VBox>
     </VBox>

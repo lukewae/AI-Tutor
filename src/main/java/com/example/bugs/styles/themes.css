@@ -1,0 +1,129 @@
+/* Main theme styles */
+.root {
+    -fx-font-family: "System";
+}
+
+/* Light mode styles */
+.light-mode {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #000000;
+}
+
+.light-mode .label {
+    -fx-text-fill: #000000;
+}
+
+.light-mode .button {
+    -fx-text-fill: #000000;
+}
+
+/* Dark Mode */
+.dark-mode {
+    -fx-background-color: #2b2b2b;
+    -fx-text-fill: white;
+}
+
+.dark-mode .label {
+    -fx-text-fill: white;
+}
+
+.dark-mode .button {
+    -fx-text-fill: white;
+    -fx-background-color: #3c3f41;
+}
+
+.dark-mode .toggle-button {
+    -fx-text-fill: white;
+    -fx-background-color: #3c3f41;
+}
+
+.dark-mode .text-field {
+    -fx-text-fill: white;
+    -fx-background-color: #3c3f41;
+}
+
+.dark-mode .text-area {
+    -fx-text-fill: white;
+    -fx-background-color: #3c3f41;
+}
+
+.dark-mode .text-area .content {
+    -fx-background-color: #3c3f41;
+}
+
+.dark-mode .scroll-pane {
+    -fx-background-color: #2b2b2b;
+}
+
+.dark-mode .viewport {
+    -fx-background-color: #2b2b2b;
+}
+
+/* High Contrast Mode Base */
+.high-contrast {
+    -fx-background-color: black;
+    -fx-text-fill: yellow;
+}
+
+.high-contrast .label {
+    -fx-text-fill: yellow;
+}
+
+.high-contrast .button {
+    -fx-text-fill: yellow;
+    -fx-background-color: #000080;
+    -fx-border-color: yellow;
+    -fx-border-width: 2px;
+}
+
+.high-contrast .toggle-button {
+    -fx-text-fill: yellow;
+    -fx-background-color: #000080;
+    -fx-border-color: yellow;
+    -fx-border-width: 2px;
+}
+
+.high-contrast .toggle-button:selected {
+    -fx-text-fill: black;
+    -fx-background-color: yellow;
+    -fx-border-color: #000080;
+}
+
+/* Header Styles */
+.high-contrast .header {
+    -fx-background-color: #000080;
+}
+
+.high-contrast .header-text {
+    -fx-text-fill: yellow;
+    -fx-font-weight: bold;
+}
+
+/* Settings Styles */
+.high-contrast .settings-header {
+    -fx-text-fill: yellow;
+    -fx-font-weight: bold;
+}
+
+.high-contrast .settings-label {
+    -fx-text-fill: yellow;
+}
+
+.high-contrast .settings-toggle {
+    -fx-text-fill: yellow;
+    -fx-background-color: #000080;
+    -fx-border-color: yellow;
+    -fx-border-width: 2px;
+}
+
+.high-contrast .settings-toggle:selected {
+    -fx-text-fill: black;
+    -fx-background-color: yellow;
+    -fx-border-color: #000080;
+}
+
+/* Title Text */
+.high-contrast .title-text {
+    -fx-text-fill: yellow;
+    -fx-font-weight: bold;
+}

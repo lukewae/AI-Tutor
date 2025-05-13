@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.example.bugs.HelloApplication;
 import com.example.bugs.dao.UserDAO;
+import com.example.bugs.util.ThemeManager;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -50,6 +51,7 @@ public class HelloController {
         Stage stage = (Stage) signUpButton.getScene().getWindow();
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("signup-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
+        ThemeManager.applyCurrentTheme(scene);
         stage.setScene(scene);
     }
     
@@ -57,6 +59,7 @@ public class HelloController {
         Stage stage = (Stage) signInButton.getScene().getWindow();
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("base-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), HelloApplication.WIDTH, HelloApplication.HEIGHT);
+        ThemeManager.applyCurrentTheme(scene);
         stage.setScene(scene);
     }
     

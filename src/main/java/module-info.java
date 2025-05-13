@@ -5,6 +5,7 @@ module com.example.addressbook {
     requires ollama4j;
     requires java.net.http;
     requires org.slf4j;
+    requires java.prefs;  // Add this line
 
     opens com.example.bugs to javafx.fxml;
     exports com.example.bugs;

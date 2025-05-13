@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.example.bugs.HelloApplication;
 import com.example.bugs.dao.UserDAO;
 import com.example.bugs.model.SignUp;
+import com.example.bugs.util.ThemeManager;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -76,6 +77,7 @@ public class SignUpController {
             Stage stage = (Stage) signInButton.getScene().getWindow();
             FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), HelloApplication.WIDTH, HelloApplication.HEIGHT);
+            ThemeManager.applyCurrentTheme(scene);
             stage.setScene(scene);
         } catch (IOException e) {
             showAlert("Error", "Could not navigate to login page.");

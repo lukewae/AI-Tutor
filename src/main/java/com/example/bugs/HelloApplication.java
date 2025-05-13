@@ -3,6 +3,7 @@ package com.example.bugs;
 import java.io.IOException;
 
 import com.example.bugs.util.DatabaseUtil;
+import com.example.bugs.util.ThemeManager;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +22,14 @@ public class HelloApplication extends Application {
         
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());  // Remove fixed width to let HBox determine size
+        
+        // Add the CSS stylesheet to the scene
+        String cssPath = getClass().getResource("/com/example/bugs/styles/themes.css").toExternalForm();
+        scene.getStylesheets().add(cssPath);
+        
+        // Apply theme based on stored preferences
+        ThemeManager.applyCurrentTheme(scene);
+        
         stage.setTitle(TITLE);
         stage.setScene(scene);
         stage.setResizable(false);  // Optional: prevent window resizing
