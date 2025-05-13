@@ -1,41 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<?import javafx.geometry.Insets?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #f5f7fa;"
-            xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.bugs.controller.ChatbotController">
+<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #f5f7fa;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bugs.controller.ChatbotController">
 
-    <VBox alignment="CENTER" spacing="10.0"
-          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-          AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <VBox alignment="CENTER" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 
         <!-- Header with back button and title -->
         <HBox alignment="CENTER_LEFT" style="-fx-background-color: #737879; -fx-padding: 15px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);">
-            <Button fx:id="backButton" mnemonicParsing="false" text="← Back"
-                    style="-fx-text-fill: white; -fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 14px;"
-                    onAction="#handleBackButton"/>
-            <Label text="AI Tutor" style="-fx-text-fill: white; -fx-padding: 0 20px;">
+            <Button fx:id="backButton" mnemonicParsing="false" onAction="#handleBackButton" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 14px;" text="← Back" />
+            <Label style="-fx-text-fill: white; -fx-padding: 0 20px;" text="AI Tutor">
                 <font>
                     <Font name="System Bold" size="36.0" />
                 </font>
             </Label>
         </HBox>
 
+        <!-- Subject buttons row -->
+        <HBox alignment="CENTER" spacing="15.0" style="-fx-padding: 15px;">
+            <Button fx:id="mathsButton" onAction="#handleMathsButton" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 8px 20px; -fx-cursor: hand;" text="Maths" />
+            <Button fx:id="englishButton" onAction="#handleEnglishButton" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 8px 20px; -fx-cursor: hand;" text="English" />
+            <Button fx:id="historyButton" onAction="#handleHistoryButton" style="-fx-background-color: #FF9800; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 8px 20px; -fx-cursor: hand;" text="History" />
+            <Button fx:id="geographyButton" onAction="#handleGeographyButton" style="-fx-background-color: #9C27B0; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 8px 20px; -fx-cursor: hand;" text="Geography" />
+        </HBox>
+
         <!-- Chat content area -->
-        <VBox fx:id="chatContainer" VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-background-radius: 10px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 8, 0, 0, 4);">
+        <VBox fx:id="chatContainer" style="-fx-background-color: white; -fx-background-radius: 10px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 8, 0, 0, 4);" VBox.vgrow="ALWAYS">
             <padding>
-                <Insets top="15.0" right="20.0" bottom="15.0" left="20.0" />
+                <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
             </padding>
 
-            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background: transparent;">
+            <ScrollPane fitToWidth="true" style="-fx-background: transparent;" VBox.vgrow="ALWAYS">
                 <content>
                     <VBox style="-fx-background-color: transparent;">
-                        <Label fx:id="responseLabel" wrapText="true" style="-fx-font-size: 14px; -fx-text-fill: #2c3e50;"/>
-                        <ProgressIndicator fx:id="thinkingSpinner" prefHeight="30.0" prefWidth="30.0" style="-fx-progress-color: #808080;"/>
+                        <Label fx:id="responseLabel" style="-fx-font-size: 14px; -fx-text-fill: #2c3e50;" wrapText="true" />
+                        <ProgressIndicator fx:id="thinkingSpinner" prefHeight="30.0" prefWidth="30.0" style="-fx-progress-color: #808080;" />
                     </VBox>
                 </content>
             </ScrollPane>
@@ -43,10 +45,9 @@
 
         <!-- Input section -->
         <HBox alignment="CENTER" spacing="10.0" style="-fx-padding: 10px 20px 20px 20px;">
-            <TextField fx:id="userInputField" HBox.hgrow="ALWAYS" promptText="Ask me anything..."
-                       style="-fx-background-radius: 20px; -fx-padding: 10px 15px; -fx-font-size: 14px; -fx-prompt-text-fill: #95a5a6;"/>
-            <ToggleButton fx:id="sendButton" mnemonicParsing="false" text="Send"
-                          style="-fx-background-color: #737879; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 10px 20px; -fx-cursor: hand;"/>
+            <Button fx:id="clearChatButton" onAction="#handleClearChat" style="-fx-background-color: #737879; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 8px 20px; -fx-cursor: hand;" text="Clear Chat" />
+            <TextField fx:id="userInputField" prefHeight="0.0" prefWidth="282.0" promptText="Ask me anything..." style="-fx-background-radius: 20px; -fx-padding: 10px 15px; -fx-font-size: 14px; -fx-prompt-text-fill: #95a5a6;" HBox.hgrow="ALWAYS" />
+            <ToggleButton fx:id="sendButton" mnemonicParsing="false" style="-fx-background-color: #737879; -fx-text-fill: white; -fx-background-radius: 20px; -fx-padding: 10px 20px; -fx-cursor: hand;" text="Send" />
         </HBox>
     </VBox>
 </AnchorPane>

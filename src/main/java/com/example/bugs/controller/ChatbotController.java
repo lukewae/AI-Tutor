@@ -27,10 +27,21 @@ public class ChatbotController {
     @FXML private ProgressIndicator thinkingSpinner;
     @FXML private VBox chatContainer;
     @FXML private Button backButton;
+    @FXML private Button mathsButton;
+    @FXML private Button englishButton;
+    @FXML private Button historyButton;
+    @FXML private Button geographyButton;
+    @FXML private Button clearChatButton;
 
     private OllamaAPI ollamaAPI;
     private List<OllamaChatMessage> chatHistory = new ArrayList<>();
     private static final String MODEL_NAME = "gemma3:4b";
+
+    // Subject prompts
+    private static final String MATHS_PROMPT = "I want to study mathematics. Can you help me with some key concepts?";
+    private static final String ENGLISH_PROMPT = "I'm studying English. Can you help me improve my language skills?";
+    private static final String HISTORY_PROMPT = "I want to learn about history. What are some important events I should know about?";
+    private static final String GEOGRAPHY_PROMPT = "I'm interested in geography. Can you teach me about world geography?";
 
     @FXML
     protected void handleBackButton() throws IOException {
@@ -56,6 +67,41 @@ public class ChatbotController {
 
         // Set up to listen for Enter key on text field
         userInputField.setOnAction(event -> sendMessage());
+    }
+
+    @FXML
+    protected void handleMathsButton() {
+        sendPredefinedMessage(MATHS_PROMPT);
+    }
+
+    @FXML
+    protected void handleEnglishButton() {
+        sendPredefinedMessage(ENGLISH_PROMPT);
+    }
+
+    @FXML
+    protected void handleHistoryButton() {
+        sendPredefinedMessage(HISTORY_PROMPT);
+    }
+
+    @FXML
+    protected void handleGeographyButton() {
+        sendPredefinedMessage(GEOGRAPHY_PROMPT);
+    }
+
+    @FXML
+    protected void handleClearChat() {
+        // Clear chat history
+        chatHistory.clear();
+        // Reset the display
+        responseLabel.setText("Chat cleared. How can I help you today?");
+    }
+
+    private void sendPredefinedMessage(String message) {
+        // Set the message in the input field (optional - for user to see what was sent)
+        userInputField.setText(message);
+        // Send the message
+        sendMessage();
     }
 
     private void sendMessage() {
