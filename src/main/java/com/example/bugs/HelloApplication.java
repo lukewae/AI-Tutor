@@ -24,7 +24,7 @@ public class HelloApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load());  // Remove fixed width to let HBox determine size
         
         // Add the CSS stylesheet to the scene
-        String cssPath = getClass().getResource("/com/example/bugs/styles/themes.css").toExternalForm();
+        String cssPath = HelloApplication.class.getResource("/com/example/bugs/styles/themes.css").toExternalForm();
         scene.getStylesheets().add(cssPath);
         
         // Apply theme based on stored preferences

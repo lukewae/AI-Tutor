@@ -3,6 +3,8 @@ package com.example.bugs.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.example.bugs.HelloApplication;
 import com.example.bugs.util.ThemeManager;
@@ -22,13 +24,17 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 public class ChatbotController {
 
     @FXML private TextField userInputField;
     @FXML private ToggleButton sendButton;
-    @FXML private Label responseLabel;
+    @FXML private TextFlow responseTextFlow;
     @FXML private ProgressIndicator thinkingSpinner;
     @FXML private VBox chatContainer;
     @FXML private Button backButton;
@@ -67,7 +73,7 @@ public class ChatbotController {
         thinkingSpinner.setVisible(false);
 
         // Display a welcome message
-        responseLabel.setText("Hello! I'm your AI tutor. How can I help you today?");
+        displayMessage("Hello! I'm your AI tutor. How can I help you today?");
 
         // Set up the send button action
         sendButton.setOnAction(event -> sendMessage());
@@ -101,7 +107,8 @@ public class ChatbotController {
         // Clear chat history
         chatHistory.clear();
         // Reset the display
-        responseLabel.setText("Chat cleared. How can I help you today?");
+        responseTextFlow.getChildren().clear();
+        displayMessage("Chat cleared. How can I help you today?");
     }
 
     private void sendPredefinedMessage(String message) {
@@ -127,8 +134,18 @@ public class ChatbotController {
         chatHistory.add(new OllamaChatMessage(OllamaChatMessageRole.USER, userMessage));
 
         // Update UI with user message
-        String currentContent = responseLabel.getText();
-        responseLabel.setText(currentContent + "\n\nYou: " + userMessage + "\n\nAI Tutor: ");
+        Text userPrompt = new Text("\n\nYou: ");
+        userPrompt.setFont(Font.font("System", FontWeight.BOLD, 14));
+        Text userText = new Text(userMessage + "\n\n");
+        userText.setFont(Font.font("System", 14));
+
+        Platform.runLater(() -> {
+            responseTextFlow.getChildren().addAll(userPrompt, userText);
+
+            Text aiPrompt = new Text("AI Tutor: ");
+            aiPrompt.setFont(Font.font("System", FontWeight.BOLD, 14));
+            responseTextFlow.getChildren().add(aiPrompt);
+        });
 
         // Create request for Ollama
         OllamaChatRequest request = new OllamaChatRequest(MODEL_NAME, chatHistory);
@@ -149,23 +166,63 @@ public class ChatbotController {
 
                 // Update UI on JavaFX thread
                 Platform.runLater(() -> {
-                    String fullResponse = currentContent +
-                            "\n\nYou: " + userMessage +
-                            "\n\nAI Tutor: " + responseContent;
-                    responseLabel.setText(fullResponse);
+                    formatAndDisplayMarkdown(responseContent);
                     thinkingSpinner.setVisible(false);
                 });
 
             } catch (Exception e) {
                 Platform.runLater(() -> {
                     thinkingSpinner.setVisible(false);
-                    responseLabel.setText(currentContent +
-                            "\n\nYou: " + userMessage +
-                            "\n\nAI Tutor: Sorry, I encountered an error. " +
+                    Text errorText = new Text("Sorry, I encountered an error. " +
                             "Please check if the Ollama server is running with the gemma3:4b model. You can ensure your Ollama server is open by entering http://localhost:11434 in your browser. If you don't see \"Ollama is running\", check your firewall settings.");
+                    errorText.setFont(Font.font("System", 14));
+                    responseTextFlow.getChildren().add(errorText);
                     e.printStackTrace();
                 });
             }
         }).start();
+    }
+
+    // Method to display regular text messages
+    private void displayMessage(String message) {
+        Text text = new Text(message);
+        text.setFont(Font.font("System", 14));
+        responseTextFlow.getChildren().add(text);
+    }
+
+    // Method to parse and format markdown in the AI's response
+    private void formatAndDisplayMarkdown(String markdown) {
+        // Pattern to match bold text (**text**)
+        Pattern boldPattern = Pattern.compile("\\*\\*(.*?)\\*\\*");
+        Matcher boldMatcher = boldPattern.matcher(markdown);
+
+        int lastEnd = 0;
+
+        // Process the text
+        while (boldMatcher.find()) {
+            // Add regular text before the bold part
+            if (boldMatcher.start() > lastEnd) {
+                String regularText = markdown.substring(lastEnd, boldMatcher.start());
+                Text regular = new Text(regularText);
+                regular.setFont(Font.font("System", 14));
+                responseTextFlow.getChildren().add(regular);
+            }
+
+            // Add bold text
+            String boldText = boldMatcher.group(1);
+            Text bold = new Text(boldText);
+            bold.setFont(Font.font("System", FontWeight.BOLD, 14));
+            responseTextFlow.getChildren().add(bold);
+
+            lastEnd = boldMatcher.end();
+        }
+
+        // Add any remaining text after the last bold part
+        if (lastEnd < markdown.length()) {
+            String remainingText = markdown.substring(lastEnd);
+            Text remaining = new Text(remainingText);
+            remaining.setFont(Font.font("System", 14));
+            responseTextFlow.getChildren().add(remaining);
+        }
     }
 }

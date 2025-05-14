@@ -1,0 +1,143 @@
+/* ===== Header Styles ===== */
+.header {
+    -fx-padding: 15px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
+
+.light-mode .header {
+    -fx-background-color: #737879;
+}
+
+.dark-mode .header {
+    -fx-background-color: #3c3f41;
+}
+
+.high-contrast .header {
+    -fx-background-color: #000080;
+}
+
+.header-button {
+    -fx-text-fill: white;
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+}
+
+.header-text {
+    -fx-text-fill: white;
+    -fx-padding: 0 10px;
+}
+
+/* ===== Subject Buttons ===== */
+.subject-button {
+    -fx-background-radius: 20px;
+    -fx-padding: 8px 20px;
+    -fx-cursor: hand;
+    -fx-text-fill: white;
+}
+
+.maths-button {
+    -fx-background-color: #4CAF50;
+}
+
+.english-button {
+    -fx-background-color: #2196F3;
+}
+
+.history-button {
+    -fx-background-color: #FF9800;
+}
+
+.geography-button {
+    -fx-background-color: #9C27B0;
+}
+
+/* ===== Chat Container ===== */
+.chat-container {
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 8, 0, 0, 4);
+}
+
+.light-mode .chat-container {
+    -fx-background-color: white;
+}
+
+.dark-mode .chat-container {
+    -fx-background-color: #3c3f41;
+}
+
+.high-contrast .chat-container {
+    -fx-background-color: black;
+    -fx-border-color: yellow;
+    -fx-border-width: 2px;
+}
+
+/* ===== Chat Content ===== */
+.chat-scroll {
+    -fx-background-color: transparent;
+    -fx-control-inner-background: transparent;
+    -fx-background-insets: 0;
+}
+
+.chat-content {
+    -fx-background-color: transparent;
+}
+
+.chat-text {
+    -fx-line-spacing: 5px;
+}
+
+/* ===== Input Section ===== */
+.input-container {
+    -fx-padding: 10px 20px 20px 20px;
+}
+
+.action-button {
+    -fx-background-radius: 20px;
+    -fx-padding: 8px 20px;
+    -fx-cursor: hand;
+    -fx-text-fill: white;
+}
+
+.light-mode .action-button {
+    -fx-background-color: #737879;
+}
+
+.dark-mode .action-button {
+    -fx-background-color: #3c3f41;
+}
+
+.high-contrast .action-button {
+    -fx-background-color: #000080;
+    -fx-border-color: yellow;
+    -fx-border-width: 2px;
+}
+
+.chat-input {
+    -fx-background-radius: 20px;
+    -fx-padding: 10px 15px;
+    -fx-font-size: 14px;
+}
+
+.light-mode .chat-input {
+    -fx-prompt-text-fill: #95a5a6;
+}
+
+.dark-mode .chat-input {
+    -fx-prompt-text-fill: #aaaaaa;
+}
+
+.high-contrast .chat-input {
+    -fx-prompt-text-fill: yellow;
+    -fx-border-color: yellow;
+    -fx-border-width: 2px;
+}
+
+/* ===== Thinking Spinner ===== */
+.thinking-spinner {
+    -fx-progress-color: #808080;
+}
+
+.high-contrast .thinking-spinner {
+    -fx-progress-color: yellow;
+}

@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
@@ -12,11 +13,16 @@
         <!-- Header with back button and title -->
         <HBox alignment="CENTER_LEFT" style="-fx-background-color: #737879; -fx-padding: 15px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);">
             <Button fx:id="backButton" mnemonicParsing="false" onAction="#handleBackButton" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 14px;" text="← Back" />
-            <Label style="-fx-text-fill: white; -fx-padding: 0 20px;" text="AI Tutor">
-                <font>
-                    <Font name="System Bold" size="36.0" />
-                </font>
-            </Label>
+            <HBox alignment="CENTER" spacing="10">
+                <Label style="-fx-text-fill: white; -fx-padding: 0 10px;" text="AI Tutor">
+                    <font>
+                        <Font name="System Bold" size="36.0" />
+                    </font>
+                </Label>
+                <ImageView fitHeight="48.0" fitWidth="48.0" preserveRatio="true">
+                    <Image url="@images/graduation_hat.png" />
+                </ImageView>
+            </HBox>
         </HBox>
 
         <!-- Subject buttons row -->
@@ -33,14 +39,25 @@
                 <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
             </padding>
 
-            <ScrollPane fitToWidth="true" style="-fx-background: transparent;" VBox.vgrow="ALWAYS">
-                <content>
-                    <VBox style="-fx-background-color: transparent;">
-                        <Label fx:id="responseLabel" style="-fx-font-size: 14px; -fx-text-fill: #2c3e50;" wrapText="true" />
-                        <ProgressIndicator fx:id="thinkingSpinner" prefHeight="30.0" prefWidth="30.0" style="-fx-progress-color: #808080;" />
-                    </VBox>
-                </content>
-            </ScrollPane>
+            <!-- Chat area with image and speech bubble -->
+            <HBox spacing="10">
+                <!-- AI Tutor Image -->
+                <ImageView fitHeight="64.0" fitWidth="64.0" preserveRatio="true">
+                    <Image url="@images/graduation_hat.png" />
+                </ImageView>
+
+                <!-- Speech bubble containing the chat -->
+                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-control-inner-background: transparent; -fx-background-insets: 0;" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                    <content>
+                        <VBox style="-fx-background-color: #ffffff;">
+                            <StackPane style="-fx-background-color: #F0F8FF; -fx-background-radius: 20px; -fx-padding: 15px;">
+                                <TextFlow fx:id="responseTextFlow" style="-fx-line-spacing: 5px;" />
+                            </StackPane>
+                            <ProgressIndicator fx:id="thinkingSpinner" prefHeight="30.0" prefWidth="30.0" style="-fx-progress-color: #808080;" />
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </HBox>
         </VBox>
 
         <!-- Input section -->
