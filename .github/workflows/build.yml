@@ -1,0 +1,41 @@
+name: Build and Test JavaFX
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Set up Xvfb (for JavaFX headless testing)
+        run: |
+          sudo apt-get install -y xvfb libxrender1 libxtst6 libxi6
+          Xvfb :99 -screen 0 1024x768x24 &
+          export DISPLAY=:99
+
+      - name: Build with Maven
+        run: mvn -B clean package
+
+      - name: Run JAR (smoke test)
+        run: |
+          java \
+            --module-path $JAVA_HOME/javafx-sdk-21/lib \
+            --add-modules javafx.controls,javafx.fxml \
+            -jar target/address-book-1.0-SNAPSHOT.jar --headless
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: AI-Tutor
+          path: |
+            target/address-book-1.0-SNAPSHOT.jar
+            target/lib/*

@@ -46,7 +46,7 @@
     <ImageView fitWidth="320" 
                fitHeight="400" 
                preserveRatio="true">
-        <Image url="@images/ai tutor log in image.png" />
+        <Image url="@images/AI tutor log in image.png" />
     </ImageView>
 
 </HBox>
