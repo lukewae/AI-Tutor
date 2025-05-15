@@ -12,95 +12,169 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. Checkout with full history
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0  # Get complete git history for debugging
+      # 1. Checkout with full history
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Get complete git history for debugging
 
-    # 2. Debug: Show branch and file structure
-    - name: Debug - Show environment
-      run: |
-        echo "=== BUILDING BRANCH ==="
-        git branch -a
-        echo "=== JAVA FILES ==="
-        find src/main/java -name "*.java"
-        echo "=== RESOURCES ==="
-        find src/main/resources -type f
+      # 2. Debug: Show branch and file structure
+      - name: Debug - Show environment
+        run: |
+          echo "=== BUILDING BRANCH ==="
+          git branch -a
+          echo "=== JAVA FILES ==="
+          find src/main/java -name "*.java"
+          echo "=== MAIN CLASS SEARCH ==="
+          grep -r "public static void main" --include="*.java" src/main/java || echo "No main method found!"
+          echo "=== PACKAGE DECLARATIONS ==="
+          grep -r "package " --include="*.java" src/main/java
+          echo "=== RESOURCES ==="
+          find src/main/resources -type f
 
-    # 3. JavaFX setup with verification
-    - name: Setup JavaFX environment
-      run: |
-        sudo apt-get install -y xvfb libgtk-3-0 libxtst6 libxrender1
-        wget https://download2.gluonhq.com/openjfx/21/openjfx-21_linux-x64_bin-sdk.zip
-        unzip openjfx-21_linux-x64_bin-sdk.zip
-        echo "JAVAFX_HOME=$(pwd)/javafx-sdk-21" >> $GITHUB_ENV
-        Xvfb :99 -screen 0 1024x768x24 &
-        export DISPLAY=:99
-        
-        echo "=== JAVAFX VERIFICATION ==="
-        ls -la $JAVAFX_HOME/lib/
+      # 3. JavaFX setup with verification
+      - name: Setup JavaFX environment
+        run: |
+          sudo apt-get install -y xvfb libgtk-3-0 libxtst6 libxrender1
+          wget https://download2.gluonhq.com/openjfx/21/openjfx-21_linux-x64_bin-sdk.zip
+          unzip openjfx-21_linux-x64_bin-sdk.zip
+          echo "JAVAFX_HOME=$(pwd)/javafx-sdk-21" >> $GITHUB_ENV
+          Xvfb :99 -screen 0 1024x768x24 &
+          export DISPLAY=:99
+          echo "=== JAVAFX VERIFICATION ==="
+          ls -la $JAVAFX_HOME/lib/
 
-    # 4. JDK setup
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        cache: 'maven'
+      # 4. JDK setup
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
 
-    # 5. Build with debug output
-    - name: Build with Maven
-      run: |
-        echo "=== MAVEN BUILD ==="
-        mvn -B clean package -Dmaven.compiler.source=21 -Dmaven.compiler.target=21
-        
-        echo "=== JAR CONTENTS ==="
-        jar tf target/address-book-1.0-SNAPSHOT.jar | grep -i "com/example/bugs" || echo "No package found!"
-        
-        echo "=== MANIFEST ==="
-        unzip -p target/address-book-1.0-SNAPSHOT.jar META-INF/MANIFEST.MF || echo "No manifest found!"
+      # 5. Build with detailed debugging
+      - name: Check directory structure before build
+        run: |
+          echo "=== CURRENT DIRECTORY ==="
+          pwd
+          echo "=== DIRECTORY STRUCTURE BEFORE BUILD ==="
+          find . -maxdepth 3 -type d | sort
+          echo "=== POM.XML LOCATION ==="
+          find . -name "pom.xml" -type f
 
-    # 6. Enhanced JAR testing
-    - name: Test JAR execution
-      run: |
-        echo "=== ATTEMPT 1: Standard Execution ==="
-        java -jar target/address-book-1.0-SNAPSHOT.jar --headless || \
-        (
-          echo "=== ATTEMPT 1 FAILED ==="
+      - name: Build with Maven
+        run: |
+          echo "=== MAVEN BUILD WITH DETAILED DEBUG ==="
+          # Show Maven version and home directory
+          mvn -version
+          echo "=== RUNNING MAVEN BUILD ==="
+          mvn -B -X clean package -Dmaven.compiler.source=21 -Dmaven.compiler.target=21
           
-          echo "=== ATTEMPT 2: Explicit Classpath ==="
-          java -cp target/address-book-1.0-SNAPSHOT.jar com.example.bugs.App --headless || \
-          (
-            echo "=== ATTEMPT 2 FAILED ==="
+          echo "=== DIRECTORY STRUCTURE AFTER BUILD ==="
+          find . -maxdepth 3 -type d | sort
+          
+          echo "=== SEARCHING FOR ANY JAR FILES ==="
+          find . -name "*.jar" -type f
+          
+          # Try to proceed if the expected JAR exists
+          if [ -f "target/address-book-1.0-SNAPSHOT.jar" ]; then
+            echo "=== JAR CONTENTS ==="
+            jar tf target/address-book-1.0-SNAPSHOT.jar > jar-contents.txt
+            cat jar-contents.txt
+            echo "=== SEARCHING FOR MAIN CLASS ==="
+            cat jar-contents.txt | grep -i ".class$" | sort
+            echo "=== MANIFEST ==="
+            unzip -p target/address-book-1.0-SNAPSHOT.jar META-INF/MANIFEST.MF || echo "No manifest found!"
+          else
+            echo "Expected JAR file not found at target/address-book-1.0-SNAPSHOT.jar"
+          fi
+
+      # 6. Try to locate correct main class
+      - name: Identify main class
+        run: |
+          echo "=== IDENTIFYING CORRECT MAIN CLASS ==="
+          # Find any JAR files
+          JAR_PATH=$(find . -name "*.jar" -type f | head -1)
+          
+          if [ -n "$JAR_PATH" ]; then
+            echo "Found JAR file at: $JAR_PATH"
+            echo "JAR_PATH=$JAR_PATH" >> $GITHUB_ENV
             
-            echo "=== ATTEMPT 3: With JavaFX Modules ==="
-            java \
-              --module-path $JAVAFX_HOME/lib \
-              --add-modules javafx.controls,javafx.fxml \
-              -jar target/address-book-1.0-SNAPSHOT.jar --headless || \
-            (
-              echo "=== ATTEMPT 3 FAILED ==="
-              echo "=== FINAL ATTEMPT: Direct Class with Modules ==="
-              java \
-                --module-path $JAVAFX_HOME/lib \
-                --add-modules javafx.controls,javafx.fxml \
-                -cp target/address-book-1.0-SNAPSHOT.jar \
-                com.example.bugs.App --headless
+            # Try to get main class from manifest
+            MAIN_CLASS=$(unzip -p "$JAR_PATH" META-INF/MANIFEST.MF 2>/dev/null | grep "Main-Class" | cut -d' ' -f2 | tr -d '\r')
+            if [ -n "$MAIN_CLASS" ]; then
+              echo "Found Main-Class in manifest: $MAIN_CLASS"
+              echo "MAIN_CLASS=$MAIN_CLASS" >> $GITHUB_ENV
+            else
+              # Try to find potential main classes in the JAR
+              echo "No Main-Class found in manifest, searching JAR..."
+              jar tf "$JAR_PATH" | grep -i ".class$" > classes.txt
+              
+              # Try to find the most likely main class based on naming convention
+              POTENTIAL_MAIN=$(cat classes.txt | grep -i -E "(app|main|launcher|application)\.class$" | head -1 | sed 's/\.class$//' | tr '/' '.')
+              if [ -n "$POTENTIAL_MAIN" ]; then
+                echo "Potential main class found: $POTENTIAL_MAIN"
+                echo "MAIN_CLASS=$POTENTIAL_MAIN" >> $GITHUB_ENV
+              else
+                echo "No main class identified, will try with expected 'com.example.bugs.App'"
+                echo "MAIN_CLASS=com.example.bugs.App" >> $GITHUB_ENV
+              fi
+            fi
+          else
+            echo "No JAR file found in the workspace"
+            echo "MAIN_CLASS=com.example.bugs.App" >> $GITHUB_ENV
+            echo "JAR_PATH=target/address-book-1.0-SNAPSHOT.jar" >> $GITHUB_ENV
+          fi
+
+      # 7. Enhanced JAR testing with identified main class
+      - name: Test JAR execution
+        run: |
+          # Check if the JAR file exists
+          if [ -f "$JAR_PATH" ]; then
+            echo "=== USING JAR: $JAR_PATH ==="
+            echo "=== ATTEMPT 1: Standard Execution ==="
+            java -jar "$JAR_PATH" --headless || \
+            ( echo "=== ATTEMPT 1 FAILED ===" 
+              echo "=== ATTEMPT 2: Explicit Classpath with identified main class ==="
+              java -cp "$JAR_PATH" $MAIN_CLASS --headless || \
+              ( echo "=== ATTEMPT 2 FAILED ==="
+                echo "=== ATTEMPT 3: With JavaFX Modules ==="
+                java \
+                  --module-path $JAVAFX_HOME/lib \
+                  --add-modules javafx.controls,javafx.fxml \
+                  -jar "$JAR_PATH" --headless || \
+                ( echo "=== ATTEMPT 3 FAILED ==="
+                  echo "=== FINAL ATTEMPT: Direct Class with Modules ==="
+                  java \
+                    --module-path $JAVAFX_HOME/lib \
+                    --add-modules javafx.controls,javafx.fxml \
+                    -cp "$JAR_PATH" \
+                    $MAIN_CLASS --headless 
+                )
+              )
             )
-          )
-        )
+          else
+            echo "JAR file not found at $JAR_PATH. Build may have failed."
+            echo "=== CHECKING MAVEN OUTPUT ==="
+            cat ~/.m2/repository/com/example/bugs/address-book/1.0-SNAPSHOT/build.log 2>/dev/null || echo "No build log found"
+            echo "=== SEARCHING FOR POM FILES ==="
+            find . -name "pom.xml" -type f -exec cat {} \;
+            exit 1
+          fi
 
-    # 7. Dependency graph
-    - name: Update dependency graph
-      uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
+      # 8. Dependency graph
+      - name: Update dependency graph
+        uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
 
-    # 8. Archive build artifacts for inspection
-    - name: Archive build results
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: build-artifacts
-        path: |
-          target/*.jar
-          target/site
-          **/logs/*.log
+      # 9. Archive build artifacts for inspection
+      - name: Archive build results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: build-artifacts
+          path: |
+            **/*.jar
+            target/
+            ./**/*.log
+            jar-contents.txt
+            classes.txt
+            **/pom.xml
