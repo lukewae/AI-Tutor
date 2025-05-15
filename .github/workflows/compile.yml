@@ -1,0 +1,47 @@
+name: Build JavaFX App (master-beta)
+
+on:
+  push:
+    branches: [ "master-beta" ]  # Only this branch
+  pull_request:
+    branches: [ "master-beta" ]  # Only PRs targeting this branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    # 1. Checkout code (with branch awareness)
+    - uses: actions/checkout@v4
+      with:
+        ref: master-beta  # Explicitly lock to this branch
+
+    # 2. Setup Java 17 with JavaFX modules
+    - name: Set up JDK 17 + JavaFX
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: 'maven'
+
+    # 3. Linux-specific JavaFX setup
+    - name: Configure JavaFX environment
+      run: |
+        sudo apt-get install -y xvfb libgtk-3-0 libxtst6 libxrender1
+        Xvfb :99 -screen 0 1024x768x24 &
+        export DISPLAY=:99
+        echo "JAVA_HOME=$JAVA_HOME" >> $GITHUB_ENV
+
+    # 4. Build with Linux JavaFX deps
+    - name: Build fat JAR
+      run: |
+        mvn clean package -DskipTests
+        ls -la target/  # Verify JAR exists
+
+    # 5. Headless test (critical validation)
+    - name: Test JAR execution
+      run: |
+        java \
+          --module-path $JAVA_HOME/lib/javafx-sdk-21/lib \
+          --add-modules javafx.controls,javafx.fxml \
+          -jar target/address-book-1.0-SNAPSHOT.jar --headless
