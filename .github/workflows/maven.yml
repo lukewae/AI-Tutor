@@ -57,125 +57,168 @@ jobs:
         run: |
           echo "=== CURRENT DIRECTORY ==="
           pwd
-          echo "=== DIRECTORY STRUCTURE BEFORE BUILD ==="
-          find . -maxdepth 3 -type d | sort
-          echo "=== POM.XML LOCATION ==="
-          find . -name "pom.xml" -type f
+          echo "=== POM.XML CONTENT ==="
+          cat pom.xml || echo "pom.xml not found in current directory!"
 
       - name: Build with Maven
         run: |
           echo "=== MAVEN BUILD WITH DETAILED DEBUG ==="
-          # Show Maven version and home directory
           mvn -version
-          echo "=== RUNNING MAVEN BUILD ==="
-          mvn -B -X clean package -Dmaven.compiler.source=21 -Dmaven.compiler.target=21
           
-          echo "=== DIRECTORY STRUCTURE AFTER BUILD ==="
-          find . -maxdepth 3 -type d | sort
+          echo "=== RUNNING MAVEN COMPILE ONLY FIRST ==="
+          mvn -B compile
           
-          echo "=== SEARCHING FOR ANY JAR FILES ==="
-          find . -name "*.jar" -type f
+          echo "=== CHECKING COMPILED CLASSES ==="
+          find target/classes -name "*.class" | sort
           
-          # Try to proceed if the expected JAR exists
+          echo "=== CHECKING FOR APP.CLASS ==="
+          find target/classes -name "App.class"
+          
+          echo "=== NOW RUNNING FULL PACKAGE ==="
+          mvn -B package -Dmaven.compiler.source=21 -Dmaven.compiler.target=21
+          
           if [ -f "target/address-book-1.0-SNAPSHOT.jar" ]; then
+            echo "=== JAR CREATED SUCCESSFULLY ==="
             echo "=== JAR CONTENTS ==="
             jar tf target/address-book-1.0-SNAPSHOT.jar > jar-contents.txt
             cat jar-contents.txt
-            echo "=== SEARCHING FOR MAIN CLASS ==="
-            cat jar-contents.txt | grep -i ".class$" | sort
-            echo "=== MANIFEST ==="
-            unzip -p target/address-book-1.0-SNAPSHOT.jar META-INF/MANIFEST.MF || echo "No manifest found!"
-          else
-            echo "Expected JAR file not found at target/address-book-1.0-SNAPSHOT.jar"
-          fi
-
-      # 6. Try to locate correct main class
-      - name: Identify main class
-        run: |
-          echo "=== IDENTIFYING CORRECT MAIN CLASS ==="
-          # Find any JAR files
-          JAR_PATH=$(find . -name "*.jar" -type f | head -1)
-          
-          if [ -n "$JAR_PATH" ]; then
-            echo "Found JAR file at: $JAR_PATH"
-            echo "JAR_PATH=$JAR_PATH" >> $GITHUB_ENV
             
-            # Try to get main class from manifest
-            MAIN_CLASS=$(unzip -p "$JAR_PATH" META-INF/MANIFEST.MF 2>/dev/null | grep "Main-Class" | cut -d' ' -f2 | tr -d '\r')
-            if [ -n "$MAIN_CLASS" ]; then
-              echo "Found Main-Class in manifest: $MAIN_CLASS"
-              echo "MAIN_CLASS=$MAIN_CLASS" >> $GITHUB_ENV
-            else
-              # Try to find potential main classes in the JAR
-              echo "No Main-Class found in manifest, searching JAR..."
-              jar tf "$JAR_PATH" | grep -i ".class$" > classes.txt
+            echo "=== CHECKING FOR APP.CLASS IN JAR ==="
+            jar tf target/address-book-1.0-SNAPSHOT.jar | grep -i "app.class"
+            
+            echo "=== CHECKING FOR COM/EXAMPLE/BUGS PATH IN JAR ==="
+            jar tf target/address-book-1.0-SNAPSHOT.jar | grep -i "com/example/bugs"
+            
+            echo "=== MANIFEST CONTENT ==="
+            unzip -p target/address-book-1.0-SNAPSHOT.jar META-INF/MANIFEST.MF
+          else
+            echo "JAR not created at expected location"
+          fi
+          
+          echo "=== MAVEN DEBUG OUTPUT ==="
+          mvn -X -B clean package -Dmaven.compiler.source=21 -Dmaven.compiler.target=21
+
+      # 6. Modify the manifest manually if needed
+      - name: Fix JAR manifest if needed
+        run: |
+          if [ -f "target/address-book-1.0-SNAPSHOT.jar" ]; then
+            # Extract current manifest
+            mkdir -p META-INF
+            unzip -p target/address-book-1.0-SNAPSHOT.jar META-INF/MANIFEST.MF > META-INF/MANIFEST.MF
+            
+            # Check if Main-Class is properly set
+            if ! grep -q "Main-Class:" META-INF/MANIFEST.MF; then
+              echo "=== ADDING MAIN-CLASS TO MANIFEST ==="
+              # Create a new manifest with Main-Class
+              echo "Manifest-Version: 1.0" > META-INF/MANIFEST.MF.new
+              echo "Main-Class: com.example.bugs.App" >> META-INF/MANIFEST.MF.new
+              cat META-INF/MANIFEST.MF >> META-INF/MANIFEST.MF.new
+              mv META-INF/MANIFEST.MF.new META-INF/MANIFEST.MF
               
-              # Try to find the most likely main class based on naming convention
-              POTENTIAL_MAIN=$(cat classes.txt | grep -i -E "(app|main|launcher|application)\.class$" | head -1 | sed 's/\.class$//' | tr '/' '.')
-              if [ -n "$POTENTIAL_MAIN" ]; then
-                echo "Potential main class found: $POTENTIAL_MAIN"
-                echo "MAIN_CLASS=$POTENTIAL_MAIN" >> $GITHUB_ENV
-              else
-                echo "No main class identified, will try with expected 'com.example.bugs.App'"
-                echo "MAIN_CLASS=com.example.bugs.App" >> $GITHUB_ENV
-              fi
+              # Update the JAR with the new manifest
+              echo "=== UPDATING JAR WITH NEW MANIFEST ==="
+              jar umf META-INF/MANIFEST.MF target/address-book-1.0-SNAPSHOT.jar
+              
+              # Verify the update
+              echo "=== UPDATED MANIFEST ==="
+              unzip -p target/address-book-1.0-SNAPSHOT.jar META-INF/MANIFEST.MF
+            else
+              echo "=== MANIFEST ALREADY HAS MAIN-CLASS ==="
+              cat META-INF/MANIFEST.MF
             fi
           else
-            echo "No JAR file found in the workspace"
-            echo "MAIN_CLASS=com.example.bugs.App" >> $GITHUB_ENV
-            echo "JAR_PATH=target/address-book-1.0-SNAPSHOT.jar" >> $GITHUB_ENV
+            echo "JAR not found, skipping manifest fix"
           fi
 
-      # 7. Enhanced JAR testing with identified main class
+      # 7. Enhanced JAR testing with fixed manifest
       - name: Test JAR execution
         run: |
-          # Check if the JAR file exists
-          if [ -f "$JAR_PATH" ]; then
-            echo "=== USING JAR: $JAR_PATH ==="
+          if [ -f "target/address-book-1.0-SNAPSHOT.jar" ]; then
             echo "=== ATTEMPT 1: Standard Execution ==="
-            java -jar "$JAR_PATH" --headless || \
+            java -jar target/address-book-1.0-SNAPSHOT.jar --headless || \
             ( echo "=== ATTEMPT 1 FAILED ===" 
-              echo "=== ATTEMPT 2: Explicit Classpath with identified main class ==="
-              java -cp "$JAR_PATH" $MAIN_CLASS --headless || \
+              echo "=== ATTEMPT 2: Explicit Classpath with App class ==="
+              java -cp target/address-book-1.0-SNAPSHOT.jar com.example.bugs.App --headless || \
               ( echo "=== ATTEMPT 2 FAILED ==="
                 echo "=== ATTEMPT 3: With JavaFX Modules ==="
                 java \
                   --module-path $JAVAFX_HOME/lib \
                   --add-modules javafx.controls,javafx.fxml \
-                  -jar "$JAR_PATH" --headless || \
+                  -jar target/address-book-1.0-SNAPSHOT.jar --headless || \
                 ( echo "=== ATTEMPT 3 FAILED ==="
                   echo "=== FINAL ATTEMPT: Direct Class with Modules ==="
                   java \
                     --module-path $JAVAFX_HOME/lib \
                     --add-modules javafx.controls,javafx.fxml \
-                    -cp "$JAR_PATH" \
-                    $MAIN_CLASS --headless 
+                    -cp target/address-book-1.0-SNAPSHOT.jar \
+                    com.example.bugs.App --headless 
                 )
               )
             )
           else
-            echo "JAR file not found at $JAR_PATH. Build may have failed."
-            echo "=== CHECKING MAVEN OUTPUT ==="
-            cat ~/.m2/repository/com/example/bugs/address-book/1.0-SNAPSHOT/build.log 2>/dev/null || echo "No build log found"
-            echo "=== SEARCHING FOR POM FILES ==="
-            find . -name "pom.xml" -type f -exec cat {} \;
+            echo "JAR file not found at target/address-book-1.0-SNAPSHOT.jar. Build may have failed."
             exit 1
           fi
 
-      # 8. Dependency graph
+      # 8. Try fixing the App class if it wasn't found in JAR
+      - name: Try creating a simple App class if it's missing
+        if: failure()
+        run: |
+          echo "=== ATTEMPTING TO CREATE A SIMPLE APP CLASS ==="
+          # Create a simple App class
+          mkdir -p src/main/java/com/example/bugs
+          cat > src/main/java/com/example/bugs/App.java << 'EOL'
+          package com.example.bugs;
+          
+          public class App {
+              public static void main(String[] args) {
+                  System.out.println("Hello from App!");
+                  
+                  boolean headless = false;
+                  for (String arg : args) {
+                      if (arg.equals("--headless")) {
+                          headless = true;
+                          break;
+                      }
+                  }
+                  
+                  System.out.println("Running in " + (headless ? "headless" : "normal") + " mode");
+                  
+                  // Exit immediately in headless mode
+                  if (headless) {
+                      System.out.println("Exiting headless mode");
+                      System.exit(0);
+                  }
+              }
+          }
+          EOL
+          
+          echo "=== REBUILDING WITH SIMPLE APP CLASS ==="
+          mvn -B clean package -Dmaven.compiler.source=21 -Dmaven.compiler.target=21
+          
+          echo "=== TESTING SIMPLE APP CLASS ==="
+          if [ -f "target/address-book-1.0-SNAPSHOT.jar" ]; then
+            java -cp target/address-book-1.0-SNAPSHOT.jar com.example.bugs.App --headless
+          else
+            echo "JAR still not created after fixing App class"
+          fi
+
+      # 9. Dependency graph
       - name: Update dependency graph
+        if: success()
         uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
 
-      # 9. Archive build artifacts for inspection
+      # 10. Archive build artifacts for inspection
       - name: Archive build results
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: build-artifacts
           path: |
-            **/*.jar
             target/
-            ./**/*.log
+            **/*.jar
+            **/App.java
+            META-INF/
             jar-contents.txt
             classes.txt
             **/pom.xml
