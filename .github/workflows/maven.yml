@@ -18,18 +18,19 @@ jobs:
           fetch-depth: 0  # Get complete git history for debugging
 
       # 2. Debug: Show branch and file structure
-      - name: Debug - Show environment
+      - name: Debug - Show environment and source code
         run: |
           echo "=== BUILDING BRANCH ==="
           git branch -a
-          echo "=== JAVA FILES ==="
-          find src/main/java -name "*.java"
-          echo "=== MAIN CLASS SEARCH ==="
-          grep -r "public static void main" --include="*.java" src/main/java || echo "No main method found!"
-          echo "=== PACKAGE DECLARATIONS ==="
-          grep -r "package " --include="*.java" src/main/java
-          echo "=== RESOURCES ==="
-          find src/main/resources -type f
+          
+          echo "=== APP.JAVA CONTENT ==="
+          cat src/main/java/com/example/bugs/App.java || echo "App.java not found!"
+          
+          echo "=== PACKAGE DECLARATION IN APP.JAVA ==="
+          grep -n "package" src/main/java/com/example/bugs/App.java || echo "No package declaration found!"
+          
+          echo "=== MAIN METHOD IN APP.JAVA ==="
+          grep -n "public static void main" src/main/java/com/example/bugs/App.java || echo "No main method found!"
 
       # 3. JavaFX setup with verification
       - name: Setup JavaFX environment
