@@ -4,20 +4,89 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
+<<<<<<< scenebuilder_UI
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<AnchorPane prefHeight="400.0"
+            prefWidth="600.0"
+            xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.bugs.controller.BaseController">
+
+    <Label layoutX="208.0" layoutY="60.0" text="MAI Tutor">
+=======
 <AnchorPane fx:id="rootPane" styleClass="light-mode" prefHeight="400.0" prefWidth="600.0" 
             xmlns="http://javafx.com/javafx/17.0.12" 
             xmlns:fx="http://javafx.com/fxml/1" 
             fx:controller="com.example.bugs.controller.BaseController">
 
     <Label layoutX="211.0" layoutY="66.0" text="MAI Tutor" styleClass="title-text">
+>>>>>>> master
         <font>
             <Font name="Droid Serif" size="36.0" />
         </font>
     </Label>
+    <ImageView fitWidth="174.0"
+               fitHeight="122.0"
+               layoutX="348.0"
+               layoutY="29.0"
+               preserveRatio="true">
+        <Image url="@images/grad.png" />
+    </ImageView>
 
+<<<<<<< scenebuilder_UI
+    <Button fx:id="studyButton"
+            onAction="#onStudyButtonClick"
+            layoutX="195.0" layoutY="163.0" mnemonicParsing="false" style="-fx-background-radius: 20;" text="Let's Study">
+        <font>
+        <Font name="Droid Serif" size="36.0" />
+        </font>
+        <padding>
+            <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+        </padding>
+    </Button>
+
+    <Button fx:id="settingsButton"
+            onAction="#onSettingsButtonClick"
+            layoutX="14.0" layoutY="349.0" mnemonicParsing="false"
+            style="-fx-background-color: transparent; -fx-border-color: transparent;">
+        <graphic>
+            <ImageView fitHeight="24.0" fitWidth="24.0">
+                <image>
+                    <Image url="@images/settings.png" />
+                </image>
+            </ImageView>
+        </graphic>
+    </Button>
+
+    <Button fx:id="logOutButton"
+            onAction="#onLogOutButtonClick"
+            layoutX="527.0" layoutY="349.0" mnemonicParsing="false"
+            text="Log out"
+            contentDisplay="RIGHT"
+            style="-fx-background-color: transparent;
+               -fx-border-color: transparent;
+               -fx-padding: 0;
+               -fx-background-insets: 0;
+               -fx-focus-color: transparent;
+               -fx-faint-focus-color: transparent;">
+        <graphic>
+            <ImageView fitHeight="24.0" fitWidth="24.0">
+                <image>
+                    <Image url="@images/logout.png"/>
+                </image>
+            </ImageView>
+        </graphic>
+    </Button>
+    </AnchorPane>
+
+=======
     <Button fx:id="studyButton" layoutX="265.0" layoutY="200.0" onAction="#onStudyButtonClick" style="-fx-background-radius: 20px; -fx-padding: 8px 15px;" text="Study" />
 
     <Button fx:id="settingsButton" layoutX="259.0" layoutY="259.0" onAction="#onSettingsButtonClick" style="-fx-background-radius: 20px; -fx-padding: 8px 15px;" text="Settings" />
 
     <Button fx:id="logOutButton" layoutX="259.0" layoutY="314.0" onAction="#onLogOutButtonClick" style="-fx-background-radius: 20px; -fx-padding: 8px 15px;" text="Log Out" />
 </AnchorPane>
+>>>>>>> master
