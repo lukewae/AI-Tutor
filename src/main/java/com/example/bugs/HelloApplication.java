@@ -19,8 +19,9 @@ public class HelloApplication extends Application {
     public void start(Stage stage) throws IOException {
         // Initialize database
         DatabaseUtil.initDatabase();
-        
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
+
+
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/bugs/hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());  // Remove fixed width to let HBox determine size
         
         // Add the CSS stylesheet to the scene
