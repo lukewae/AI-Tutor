@@ -1,20 +1,33 @@
-name: JavaFX CI/CD Pipeline
+name: JavaFX CI/CD Pipeline (Debug Mode)
 
 on:
   push:
     branches: [ "master-beta" ]
   pull_request:
     branches: [ "master-beta" ]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. Checkout code
+    # 1. Checkout with full history
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Get complete git history for debugging
 
-    # 2. Install JavaFX SDK and Linux dependencies
+    # 2. Debug: Show branch and file structure
+    - name: Debug - Show environment
+      run: |
+        echo "=== BUILDING BRANCH ==="
+        git branch -a
+        echo "=== JAVA FILES ==="
+        find src/main/java -name "*.java"
+        echo "=== RESOURCES ==="
+        find src/main/resources -type f
+
+    # 3. JavaFX setup with verification
     - name: Setup JavaFX environment
       run: |
         sudo apt-get install -y xvfb libgtk-3-0 libxtst6 libxrender1
@@ -23,8 +36,11 @@ jobs:
         echo "JAVAFX_HOME=$(pwd)/javafx-sdk-21" >> $GITHUB_ENV
         Xvfb :99 -screen 0 1024x768x24 &
         export DISPLAY=:99
+        
+        echo "=== JAVAFX VERIFICATION ==="
+        ls -la $JAVAFX_HOME/lib/
 
-    # 3. Set up JDK 17 with Maven caching
+    # 4. JDK setup
     - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
@@ -32,19 +48,59 @@ jobs:
         distribution: 'temurin'
         cache: 'maven'
 
-    # 4. Build with Java 17 compatibility
+    # 5. Build with debug output
     - name: Build with Maven
       run: |
-        mvn -B clean package -Dmaven.compiler.source=17 -Dmaven.compiler.target=21
+        echo "=== MAVEN BUILD ==="
+        mvn -B clean package -Dmaven.compiler.source=21 -Dmaven.compiler.target=21
+        
+        echo "=== JAR CONTENTS ==="
+        jar tf target/address-book-1.0-SNAPSHOT.jar | grep -i "com/example/bugs" || echo "No package found!"
+        
+        echo "=== MANIFEST ==="
+        unzip -p target/address-book-1.0-SNAPSHOT.jar META-INF/MANIFEST.MF || echo "No manifest found!"
 
-    # 5. Test the JAR with JavaFX modules
+    # 6. Enhanced JAR testing
     - name: Test JAR execution
       run: |
-        java \
-          --module-path $JAVAFX_HOME/lib \
-          --add-modules javafx.controls,javafx.fxml \
-          -jar target/address-book-1.0-SNAPSHOT.jar --headless
+        echo "=== ATTEMPT 1: Standard Execution ==="
+        java -jar target/address-book-1.0-SNAPSHOT.jar --headless || \
+        (
+          echo "=== ATTEMPT 1 FAILED ==="
+          
+          echo "=== ATTEMPT 2: Explicit Classpath ==="
+          java -cp target/address-book-1.0-SNAPSHOT.jar com.example.bugs.App --headless || \
+          (
+            echo "=== ATTEMPT 2 FAILED ==="
+            
+            echo "=== ATTEMPT 3: With JavaFX Modules ==="
+            java \
+              --module-path $JAVAFX_HOME/lib \
+              --add-modules javafx.controls,javafx.fxml \
+              -jar target/address-book-1.0-SNAPSHOT.jar --headless || \
+            (
+              echo "=== ATTEMPT 3 FAILED ==="
+              echo "=== FINAL ATTEMPT: Direct Class with Modules ==="
+              java \
+                --module-path $JAVAFX_HOME/lib \
+                --add-modules javafx.controls,javafx.fxml \
+                -cp target/address-book-1.0-SNAPSHOT.jar \
+                com.example.bugs.App --headless
+            )
+          )
+        )
 
-    # 6. Dependency graph (kept from original)
+    # 7. Dependency graph
     - name: Update dependency graph
       uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
+
+    # 8. Archive build artifacts for inspection
+    - name: Archive build results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: build-artifacts
+        path: |
+          target/*.jar
+          target/site
+          **/logs/*.log
