@@ -19,25 +19,21 @@ public class SettingsController {
     @FXML private Button backButton;
     @FXML private ToggleButton darkModeToggle;
     @FXML private ToggleButton highContrastToggle;
-    @FXML private ToggleButton placeholderToggle;
     @FXML private AnchorPane rootPane;
     
     private final Preferences prefs = Preferences.userNodeForPackage(SettingsController.class);
     private boolean isDarkMode;
     private boolean isHighContrast;
-    private boolean isPlaceholder;
 
     @FXML
     public void initialize() {
         // Load saved preferences
         isDarkMode = prefs.getBoolean("darkMode", false);
         isHighContrast = prefs.getBoolean("highContrast", false);
-        isPlaceholder = prefs.getBoolean("placeholder", false);
         
         // Set toggle buttons state based on preferences
         darkModeToggle.setSelected(isDarkMode);
         highContrastToggle.setSelected(isHighContrast);
-        placeholderToggle.setSelected(isPlaceholder);
         
         // Apply current theme
         applyTheme();
@@ -69,12 +65,6 @@ public class SettingsController {
         isHighContrast = highContrastToggle.isSelected();
         ThemeManager.saveThemePreferences(isDarkMode, isHighContrast);
         applyTheme();
-    }
-    
-    @FXML
-    protected void handlePlaceholderToggle() {
-        isPlaceholder = placeholderToggle.isSelected();
-        prefs.putBoolean("placeholder", isPlaceholder);
     }
     
     private void applyTheme() {

@@ -44,19 +44,6 @@
                                  styleClass="toggle-button, settings-toggle"
                                  onAction="#handleHighContrastToggle"/>
                 </HBox>
-                
-                <Label text="Placeholder Option:" styleClass="settings-label" style="-fx-font-size: 16px;"/>
-                <HBox spacing="15.0">
-                    <ToggleButton fx:id="placeholderToggle" text="Placeholder" 
-                                 styleClass="toggle-button, settings-toggle"
-                                 onAction="#handlePlaceholderToggle"/>
-                </HBox>
-            </VBox>
-            
-            <!-- Language section preserved from original -->
-            <VBox alignment="CENTER" spacing="10.0" style="-fx-padding: 20px 0 0 0;">
-                <Label text="Language:" style="-fx-font-size: 16px;"/>
-                <Button text="EN - English" style="-fx-background-radius: 20px; -fx-padding: 5px 15px;"/>
             </VBox>
         </VBox>
     </VBox>
