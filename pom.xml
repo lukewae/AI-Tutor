@@ -144,14 +144,16 @@
                 <version>3.2.5</version>
                 <configuration>
                     <argLine>
-                        --add-exports javafx.graphics/com.sun.javafx.application=org.testfx.core
-                        --add-opens javafx.graphics/com.sun.javafx.tk=org.testfx.core
-                        --add-opens javafx.graphics/com.sun.glass.ui=org.testfx.core
-                        --add-opens javafx.graphics/javafx.stage=org.testfx.core
-                        --add-opens javafx.graphics/javafx.scene=org.testfx.core
-                        --add-opens javafx.scene.control/javafx.scene.control.skin=org.testfx.core
-                        --add-opens javafx.scene.control/com.sun.javafx.scene.control.behavior=org.testfx.core
-                        --add-opens javafx.base/com.sun.javafx.event=org.testfx.core
+                        --add-opens javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
+                        --add-opens javafx.graphics/com.sun.javafx.tk=ALL-UNNAMED
+                        --add-opens javafx.graphics/com.sun.glass.ui=ALL-UNNAMED
+                        --add-opens javafx.graphics/javafx.stage=ALL-UNNAMED
+                        --add-opens javafx.graphics/javafx.scene=ALL-UNNAMED
+                        --add-opens javafx.controls/com.sun.javafx.scene.control.behavior=ALL-UNNAMED
+                        --add-opens javafx.controls/javafx.scene.control.skin=ALL-UNNAMED
+                        --add-opens javafx.base/com.sun.javafx.event=ALL-UNNAMED
+                        --add-opens javafx.base/com.sun.javafx.collections=ALL-UNNAMED
+                        --add-opens javafx.base/javafx.beans.property.adapter=ALL-UNNAMED
                         <!-- Add more opens/exports if your specific tests need them -->
                         ${surefire.argLine} <!-- Allows other plugins to add argLine properties -->
                     </argLine>
