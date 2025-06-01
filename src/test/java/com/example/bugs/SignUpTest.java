@@ -1,3 +1,5 @@
+package com.example.bugs;
+
 import com.example.bugs.model.SignUp;
 
 import org.junit.jupiter.api.BeforeEach;

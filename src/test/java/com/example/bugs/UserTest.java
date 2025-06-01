@@ -1,3 +1,5 @@
+package com.example.bugs;
+
 import com.example.bugs.model.Contact;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
