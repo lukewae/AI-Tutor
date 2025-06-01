@@ -11,7 +11,7 @@
 
     <Label layoutX="211.0" layoutY="66.0" text="MAI Tutor" styleClass="title-text">
         <font>
-            <Font name="Droid Serif" size="36.0" />
+            <Font name="Droid Serif" size="35.0" />
         </font>
     </Label>
 
