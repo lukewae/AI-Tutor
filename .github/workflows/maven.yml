@@ -43,8 +43,6 @@ jobs:
       - name: Run Tests with Maven
         run: |
           mvn -B test \
-            -Dmaven.compiler.source=17 \
-            -Dmaven.compiler.target=21 \
             -Dtestfx.robot=glass \
             -Dtestfx.headless=true \
             -Dprism.order=sw \
