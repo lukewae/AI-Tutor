@@ -1,4 +1,4 @@
-name: JavaFX CI/CD Pipeline
+name: Run Unit Tests
 
 on:
   push:
@@ -7,62 +7,6 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      # 1. Checkout code
-      - uses: actions/checkout@v4
-
-      # 2. Install JavaFX SDK and Linux dependencies
-      - name: Setup JavaFX environment
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y xvfb libgtk-3-0 libxtst6 libxrender1
-          wget https://download2.gluonhq.com/openjfx/21.0.2/openjfx-21.0.2_linux-x64_bin-sdk.zip
-          unzip openjfx-21.0.2_linux-x64_bin-sdk.zip
-          echo "JAVAFX_HOME=$(pwd)/javafx-sdk-21.0.2" >> $GITHUB_ENV
-          Xvfb :99 -screen 0 1024x768x24 &
-          echo "DISPLAY=:99" >> $GITHUB_ENV
-
-      # 3. Set up JDK 21 with Maven caching
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-          cache: 'maven'
-
-      # 4. Initialize SQLite database for tests
-      - name: Initialize test database
-        run: |
-          mkdir -p ${HOME}/.config/aitutor
-          touch ${HOME}/.config/aitutor/aitutor.db
-
-      # 5. Run tests with Maven
-      - name: Run Tests with Maven
-        run: |
-          mvn -B test --no-transfer-progress
-
-      # 6. Publish Test Results
-      - name: Publish Test Results
-        if: always()
-        uses: mikepenz/action-junit-report@v4
-        with:
-          report_paths: '**/target/surefire-reports/TEST-*.xml'
-          fail_on_failure: true
-          require_tests: true
-
-      # 7. Build package (if tests pass)
-      - name: Build package
-        if: success()
-        run: |
-          mvn -B package -DskipTests
-
-      # 8. Update dependency graph
-      - name: Update dependency graph
-        uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
-
   test:
     runs-on: ubuntu-latest
 
