@@ -14,7 +14,7 @@ jobs:
       # 1. Checkout code
       - uses: actions/checkout@v4
 
-      # 2. Install JavaFX SDK and Linux dependencies
+      # 2. Install JavaFX SDK and Linux dependencies for GUI testing
       - name: Setup JavaFX environment
         run: |
           sudo apt-get update
@@ -22,7 +22,8 @@ jobs:
           wget https://download2.gluonhq.com/openjfx/21.0.2/openjfx-21.0.2_linux-x64_bin-sdk.zip
           unzip openjfx-21.0.2_linux-x64_bin-sdk.zip
           echo "JAVAFX_HOME=$(pwd)/javafx-sdk-21.0.2" >> $GITHUB_ENV
-          Xvfb :99 -screen 0 1024x768x24 &
+          # Start Xvfb as a background service for headless testing
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
           echo "DISPLAY=:99" >> $GITHUB_ENV
 
       # 3. Set up JDK 21 with Maven caching
@@ -33,20 +34,37 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      # 4. Build with Maven (set source/target as needed)
+      # 4. Build with Maven with consistent compiler settings
       - name: Build with Maven
         run: |
-          mvn -B clean package -Dmaven.compiler.source=17 -Dmaven.compiler.target=21
+          mvn -B clean package -Dmaven.compiler.source=21 -Dmaven.compiler.target=21
+      
+      # 5. Run tests separately with proper TestFX configuration
+      - name: Run Tests
+        run: |
+          mvn -B test \
+            -Dtestfx.robot=glass \
+            -Dglass.platform=Monocle \
+            -Dmonocle.platform=Headless \
+            -Dprism.order=sw \
+            -Djava.awt.headless=true \
+            -Dtestfx.headless=true
 
-      # 5. Test the JAR with JavaFX modules
+      # 6. Test JAR execution (skip if tests fail)
       - name: Test JAR execution
         run: |
-          JAR_FILE=$(ls target/*.jar | head -n 1)
-          java \
-            --module-path $JAVAFX_HOME/lib \
-            --add-modules javafx.controls,javafx.fxml \
-            -jar $JAR_FILE --headless
+          JAR_FILE=$(ls target/*.jar | grep -v original | head -n 1)
+          if [ -f "$JAR_FILE" ]; then
+            echo "Testing JAR: $JAR_FILE"
+            java \
+              --module-path $JAVAFX_HOME/lib \
+              --add-modules javafx.controls,javafx.fxml,javafx.graphics \
+              -jar $JAR_FILE --headless --test-mode
+          else
+            echo "No JAR file found to test"
+            exit 1
+          fi
 
-      # 6. Update dependency graph
+      # 7. Update dependency graph
       - name: Update dependency graph
         uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6

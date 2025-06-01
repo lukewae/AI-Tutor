@@ -1,6 +1,7 @@
 package com.example.bugs;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import com.example.bugs.util.DatabaseUtil;
 import com.example.bugs.util.ThemeManager;
@@ -14,12 +15,24 @@ public class HelloApplication extends Application {
     public static final String TITLE = "AI Tutor";
     public static final int WIDTH = 640;  // Keep this width for other views
     public static final int HEIGHT = 400;
+    
+    // Flag for CI/CD testing
+    private static boolean isTestMode = false;
+    private static boolean isHeadless = false;
 
     @Override
     public void start(Stage stage) throws IOException {
+        // Parse parameters from command line
+        Parameters params = getParameters();
+        if (params != null && params.getRaw().contains("--test-mode")) {
+            isTestMode = true;
+        }
+        if (params != null && params.getRaw().contains("--headless")) {
+            isHeadless = true;
+        }
+
         // Initialize database
         DatabaseUtil.initDatabase();
-
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/bugs/hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());  // Remove fixed width to let HBox determine size
@@ -34,10 +47,27 @@ public class HelloApplication extends Application {
         stage.setTitle(TITLE);
         stage.setScene(scene);
         stage.setResizable(false);  // Optional: prevent window resizing
-        stage.show();
+        
+        // Only show the window if not in headless mode
+        if (!isHeadless) {
+            stage.show();
+        }
     }
 
     public static void main(String[] args) {
-        launch();
+        // Check args for CI flags before launch
+        isTestMode = Arrays.asList(args).contains("--test-mode");
+        isHeadless = Arrays.asList(args).contains("--headless");
+        
+        launch(args);
+    }
+    
+    // Getters for test purposes
+    public static boolean isTestMode() {
+        return isTestMode;
+    }
+    
+    public static boolean isHeadless() {
+        return isHeadless;
     }
 }
