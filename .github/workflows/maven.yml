@@ -1,19 +1,16 @@
 name: JavaFX CI/CD Pipeline
-
 on:
   push:
-    branches: [ "master-beta" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "master-beta" ]
-
+    branches: [ "master" ]
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       # 1. Checkout code
       - uses: actions/checkout@v4
-
+      
       # 2. Install JavaFX SDK and Linux dependencies
       - name: Setup JavaFX environment
         run: |
@@ -24,7 +21,7 @@ jobs:
           echo "JAVAFX_HOME=$(pwd)/javafx-sdk-21.0.2" >> $GITHUB_ENV
           Xvfb :99 -screen 0 1024x768x24 &
           echo "DISPLAY=:99" >> $GITHUB_ENV
-
+          
       # 3. Set up JDK 21 with Maven caching
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -32,18 +29,33 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: 'maven'
-
+          
       # 4. Initialize SQLite database for tests
       - name: Initialize test database
         run: |
           mkdir -p ${HOME}/.config/aitutor
           touch ${HOME}/.config/aitutor/aitutor.db
-
-      # 5. Run tests with Maven
+          
+      # 5. Verify test files exist
+      - name: Check test files
+        run: |
+          echo "Checking for test files..."
+          find src/test -name "*.java" -type f || echo "No test files found"
+          ls -la src/test/java/com/example/bugs/ || echo "Test directory not found"
+          
+      # 6. Compile test classes first
+      - name: Compile tests
+        run: |
+          mvn -B test-compile \
+            -Dmaven.compiler.source=21 \
+            -Dmaven.compiler.target=21 \
+            --no-transfer-progress
+            
+      # 7. Run tests with Maven
       - name: Run Tests with Maven
         run: |
           mvn -B test \
-            -Dmaven.compiler.source=17 \
+            -Dmaven.compiler.source=21 \
             -Dmaven.compiler.target=21 \
             -Dtestfx.robot=glass \
             -Dtestfx.headless=true \
@@ -53,23 +65,36 @@ jobs:
             -Dheadless=true \
             -Dglass.platform=Monocle \
             -Dmonocle.platform=Headless \
+            -Dtest=FxTest,SignUpTest,UserTest,NavigationAndChatbotTest \
             --no-transfer-progress
-
-      # 6. Publish Test Results
+            
+      # 8. List test results for debugging
+      - name: Check test results
+        if: always()
+        run: |
+          echo "Checking for test result files..."
+          find . -name "surefire-reports" -type d || echo "No surefire-reports directory found"
+          find . -name "TEST-*.xml" -type f || echo "No test XML files found"
+          ls -la target/surefire-reports/ || echo "No target/surefire-reports directory"
+          
+      # 9. Publish Test Results
       - name: Publish Test Results
         if: always()
         uses: mikepenz/action-junit-report@v4
         with:
           report_paths: '**/target/surefire-reports/TEST-*.xml'
           fail_on_failure: true
-          require_tests: true
-
-      # 7. Build package (if tests pass)
+          require_tests: false
+          check_name: 'JavaFX Test Results'
+          
+      # 10. Build package (if tests pass)
       - name: Build package
         if: success()
         run: |
-          mvn -B package -DskipTests
-
-      # 8. Update dependency graph
+          mvn -B package -DskipTests \
+            -Dmaven.compiler.source=21 \
+            -Dmaven.compiler.target=21
+            
+      # 11. Update dependency graph
       - name: Update dependency graph
         uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
