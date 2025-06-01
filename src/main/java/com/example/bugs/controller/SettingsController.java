@@ -27,7 +27,7 @@ public class SettingsController {
 
     @FXML
     public void initialize() {
-        // Load saved preference
+        // Load saved preferences
         isDarkMode = prefs.getBoolean("darkMode", false);
         isHighContrast = prefs.getBoolean("highContrast", false);
         
