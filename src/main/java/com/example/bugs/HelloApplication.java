@@ -28,7 +28,7 @@ public class HelloApplication extends Application {
         String cssPath = getClass().getResource("/com/example/bugs/styles/themes.css").toExternalForm();
         scene.getStylesheets().add(cssPath);
         
-        // Apply theme based on stored preferences
+        // Apply theme based on stored preference
         ThemeManager.applyCurrentTheme(scene);
         
         stage.setTitle(TITLE);
