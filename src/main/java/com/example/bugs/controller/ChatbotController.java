@@ -24,6 +24,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+
 public class ChatbotController {
 
     @FXML private TextField userInputField;
@@ -48,6 +49,10 @@ public class ChatbotController {
     private static final String HISTORY_PROMPT = "I want to learn about history. What are some important events I should know about?";
     private static final String GEOGRAPHY_PROMPT = "I'm interested in geography. Can you teach me about world geography?";
 
+    public void setOllamaAPI(OllamaAPI ollamaAPI) {
+        this.ollamaAPI = ollamaAPI;
+    }
+
     @FXML
     protected void handleBackButton() throws IOException {
         Stage stage = (Stage) backButton.getScene().getWindow();
@@ -61,7 +66,10 @@ public class ChatbotController {
     @FXML
     public void initialize() {
         // Initialize Ollama API (using localhost by default)
-        ollamaAPI = new OllamaAPI();
+        if (this.ollamaAPI == null) {
+            String ollamaHost = System.getenv().getOrDefault("OLLAMA_HOST", "http://localhost:11434");
+            this.ollamaAPI = new OllamaAPI(ollamaHost);
+        }
 
         // Set up spinner as initially invisible
         thinkingSpinner.setVisible(false);
