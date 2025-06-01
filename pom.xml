@@ -155,7 +155,7 @@
                         --add-opens javafx.base/com.sun.javafx.collections=ALL-UNNAMED
                         --add-opens javafx.base/javafx.beans.property.adapter=ALL-UNNAMED
                         <!-- Add more opens/exports if your specific tests need them -->
-                        ${surefire.argLine} <!-- Allows other plugins to add argLine properties -->
+                        ${argLine}
                     </argLine>
                 </configuration>
             </plugin>
