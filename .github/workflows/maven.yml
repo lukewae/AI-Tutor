@@ -42,16 +42,7 @@ jobs:
       # 5. Run tests with Maven
       - name: Run Tests with Maven
         run: |
-          mvn -B test \
-            -Dtestfx.robot=glass \
-            -Dtestfx.headless=true \
-            -Dprism.order=sw \
-            -Dprism.text=t2k \
-            -Djava.awt.headless=true \
-            -Dheadless=true \
-            -Dglass.platform=Monocle \
-            -Dmonocle.platform=Headless \
-            --no-transfer-progress
+          mvn -B test --no-transfer-progress
 
       # 6. Publish Test Results
       - name: Publish Test Results

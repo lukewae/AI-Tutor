@@ -144,18 +144,16 @@
                 <version>3.5.3</version>
                 <configuration>
                     <argLine>
-                        --add-opens javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
-                        --add-opens javafx.graphics/com.sun.javafx.tk=ALL-UNNAMED
-                        --add-opens javafx.graphics/com.sun.glass.ui=ALL-UNNAMED
-                        --add-opens javafx.graphics/javafx.stage=ALL-UNNAMED
-                        --add-opens javafx.graphics/javafx.scene=ALL-UNNAMED
-                        --add-opens javafx.controls/com.sun.javafx.scene.control.behavior=ALL-UNNAMED
-                        --add-opens javafx.controls/javafx.scene.control.skin=ALL-UNNAMED
-                        --add-opens javafx.base/com.sun.javafx.event=ALL-UNNAMED
-                        --add-opens javafx.base/com.sun.javafx.collections=ALL-UNNAMED
-                        --add-opens javafx.base/javafx.beans.property.adapter=ALL-UNNAMED
-                        <!-- Add more opens/exports if your specific tests need them -->
-                        ${argLine}
+                        --add-opens=javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
+                        --add-opens=javafx.graphics/com.sun.javafx.tk=ALL-UNNAMED
+                        --add-opens=javafx.graphics/com.sun.glass.ui=ALL-UNNAMED
+                        --add-opens=javafx.graphics/javafx.stage=ALL-UNNAMED
+                        --add-opens=javafx.graphics/javafx.scene=ALL-UNNAMED
+                        --add-opens=javafx.controls/com.sun.javafx.scene.control.behavior=ALL-UNNAMED
+                        --add-opens=javafx.controls/javafx.scene.control.skin=ALL-UNNAMED
+                        --add-opens=javafx.base/com.sun.javafx.event=ALL-UNNAMED
+                        --add-opens=javafx.base/com.sun.javafx.collections=ALL-UNNAMED
+                        --add-opens=javafx.base/javafx.beans.property.adapter=ALL-UNNAMED
                     </argLine>
                 </configuration>
             </plugin>
